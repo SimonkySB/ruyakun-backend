@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagerMS", "UserManagerMS\UserManagerMS.csproj", "{837DDE83-DF95-42D3-A452-6534D4A6DBFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetsManagerMS", "PetsManagerMS\PetsManagerMS.csproj", "{E31CE08A-C8E9-4B47-B04B-B4B0A992429D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdoptionManagerMS", "AdoptionManagerMS\AdoptionManagerMS.csproj", "{171E85AC-ECAE-4739-BE9A-1E7DE18236BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{837DDE83-DF95-42D3-A452-6534D4A6DBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{837DDE83-DF95-42D3-A452-6534D4A6DBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{837DDE83-DF95-42D3-A452-6534D4A6DBFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E31CE08A-C8E9-4B47-B04B-B4B0A992429D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E31CE08A-C8E9-4B47-B04B-B4B0A992429D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E31CE08A-C8E9-4B47-B04B-B4B0A992429D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E31CE08A-C8E9-4B47-B04B-B4B0A992429D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{171E85AC-ECAE-4739-BE9A-1E7DE18236BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171E85AC-ECAE-4739-BE9A-1E7DE18236BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171E85AC-ECAE-4739-BE9A-1E7DE18236BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171E85AC-ECAE-4739-BE9A-1E7DE18236BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

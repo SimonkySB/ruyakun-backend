@@ -6,3 +6,17 @@ services:
       dockerfile: UserManagerMS/Dockerfile
     ports:
       - "5001:5001"
+  petsmanagerms:
+    image: petsmanagerms
+    build:
+      context: .
+      dockerfile: PetsManagerMS/Dockerfile
+    ports:
+      - "5002:5002"
+  adoptionmanagerms:
+    image: adoptionmanagerms
+    build:
+      context: .
+      dockerfile: AdoptionManagerMS/Dockerfile
+    ports:
+      - "5003:5003"
