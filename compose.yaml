@@ -1,0 +1,8 @@
+services:
+  usermanagerms:
+    image: usermanagerms
+    build:
+      context: .
+      dockerfile: UserManagerMS/Dockerfile
+    ports:
+      - "5001:5001"
