@@ -6,5 +6,4 @@ public class AnimalImagen
     public string url { get; set; }
     public string? refCode { get; set; }
     public int animalId { get; set; }
-    public Animal animal { get; set; }
 }

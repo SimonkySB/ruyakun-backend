@@ -77,5 +77,20 @@ public class AnimalController(AnimalService animalService) : ControllerBase
         var res = await animalService.ListarNivelActividades();
         return Ok(res);
     }
+
+    [HttpPost("{animalId}/imagenes")]
+    public async Task<IActionResult> AgregarImagen(int animalId, [FromForm] IFormFile file)
+    {
+        await animalService.AgregarImagen(animalId, file);
+        return NoContent();
+    }
+
+    [HttpDelete("{animalId}/imagenes/{id}")]
+    public async Task<IActionResult> EliminarImagen(int animalId, int id)
+    {
+        await animalService.EliminarImagen(animalId, id);
+        return NoContent();
+    }
+    
     
 }

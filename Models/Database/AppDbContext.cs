@@ -132,6 +132,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.HasOne(t => t.organizacion).WithMany().HasForeignKey(t => t.organizacionId);
             opt.HasOne(t => t.tamano).WithMany().HasForeignKey(t => t.tamanoId);
             opt.HasOne(t => t.nivelActividad).WithMany().HasForeignKey(t => t.nivelActividadId);
+            
+            opt.HasMany(a => a.animalImagenes).WithOne().HasForeignKey(a => a.animalId);
         });
         
         modelBuilder.Entity<AnimalImagen>(opt =>
@@ -142,8 +144,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.url).HasColumnName("URL");
             opt.Property(p => p.refCode).HasColumnName("REFCODE");
             opt.Property(p => p.animalId).HasColumnName("ANIMALID");
-            
-            opt.HasOne(t => t.animal).WithMany(t => t.animalImagenes).HasForeignKey(t => t.animalId);
         });
         
         modelBuilder.Entity<AdopcionEstado>(opt =>

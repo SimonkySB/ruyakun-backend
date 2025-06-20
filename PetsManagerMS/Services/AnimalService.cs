@@ -1,3 +1,5 @@
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Database;
@@ -7,7 +9,7 @@ using Shared;
 namespace PetsManagerMS.Services;
 
 
-public class AnimalService(AppDbContext db)
+public class AnimalService(AppDbContext db, Cloudinary cloudinary)
 {
 
     public async Task<List<Animal>> List()
@@ -18,6 +20,7 @@ public class AnimalService(AppDbContext db)
             .Include(a => a.sexo)
             .Include(a => a.nivelActividad)
             .Include(a => a.tamano)
+            .Include(a => a.animalImagenes)
             .Where(a => a.fechaEliminacion == null && a.organizacion.fechaEliminacion == null)
             .ToListAsync();
         return res;
@@ -30,6 +33,7 @@ public class AnimalService(AppDbContext db)
             .Include(a => a.sexo)
             .Include(a => a.nivelActividad)
             .Include(a => a.tamano)
+            .Include(a => a.animalImagenes)
             .Where(a => a.fechaEliminacion == null && a.animalId == id && a.organizacion.fechaEliminacion == null)
             .FirstOrDefaultAsync();
         return res;
@@ -111,7 +115,67 @@ public class AnimalService(AppDbContext db)
     {
         return await db.NivelActividad.AsTracking().ToListAsync();
     }
-    
+
+
+    public async Task AgregarImagen(int animalId, IFormFile file)
+    {
+        if (file.Length == 0)
+        {
+            throw new AppException("Archivo no valido");
+        }
+        
+        var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png" };
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+        if (string.IsNullOrEmpty(extension) || !extensionesPermitidas.Contains(extension))
+        {
+            throw new AppException("Extensión de archivo no permitida. Solo se permiten .jpg, .jpeg, .png");
+        }
+
+        var animal = await GetByIdOrException(animalId);
+        
+        
+        var nombreArchivo = $"{Guid.NewGuid()}{extension}";
+        
+        var uploadParams = new ImageUploadParams()
+        {
+            File = new FileDescription(nombreArchivo, file.OpenReadStream()),
+        };
+        var uploadResult = cloudinary.Upload(uploadParams);
+        
+        string refCode = uploadResult.PublicId;
+        string url = uploadResult.Url.OriginalString;
+        
+        AnimalImagen imagen = new()
+        {
+            url = url,
+            refCode = refCode
+        };
+        animal.animalImagenes.Add(imagen);
+        await db.SaveChangesAsync();
+    }
+
+    public async Task EliminarImagen(int animalId, int imagenId)
+    {
+        var animal = await GetByIdOrException(animalId);
+        var imagen = animal.animalImagenes.FirstOrDefault(a => a.animalImagenId == imagenId);
+        if (imagen == null)
+        {
+            throw new AppException("Imagen no existe");
+        }
+        
+        try
+        {
+            await cloudinary.DeleteResourcesAsync(imagen.refCode);
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
+        
+        db.AnimalImagen.Remove(imagen);
+        await db.SaveChangesAsync();
+    }
     
     
     //
@@ -150,6 +214,7 @@ public class AnimalService(AppDbContext db)
     {
         var res = await db.Animal
             .Include(a => a.organizacion)
+            .Include(a => a.animalImagenes)
             .Where(a => a.fechaEliminacion == null && a.animalId == id && a.organizacion.fechaEliminacion == null)
             .FirstOrDefaultAsync();
         if (res == null)
