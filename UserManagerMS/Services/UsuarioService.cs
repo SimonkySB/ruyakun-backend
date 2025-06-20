@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Models;
+using Models.Database;
 using UserManagerMS.Core;
 using UserManagerMS.Dtos;
-using UserManagerMS.Models;
 
 namespace UserManagerMS.Services;
 

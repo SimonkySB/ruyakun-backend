@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using UserManagerMS;
+using Models.Database;
 using UserManagerMS.Core;
 using UserManagerMS.Services;
 

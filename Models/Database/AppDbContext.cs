@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using UserManagerMS.Models;
 
-namespace UserManagerMS;
+namespace Models.Database;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

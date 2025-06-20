@@ -1,4 +1,4 @@
-namespace UserManagerMS.Models;
+namespace Models;
 
 public class Especie
 {

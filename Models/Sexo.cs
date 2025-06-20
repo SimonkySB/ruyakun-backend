@@ -1,4 +1,5 @@
-namespace UserManagerMS.Models;
+namespace Models;
+
 
 public class Sexo
 {
