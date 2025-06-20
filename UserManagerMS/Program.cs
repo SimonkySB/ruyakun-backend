@@ -49,7 +49,7 @@ builder.Services.AddCors(options =>
 });
 
 
-
+builder.Services.AddScoped<UsuarioService>();
 
 
 
