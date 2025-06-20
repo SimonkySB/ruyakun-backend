@@ -12,7 +12,9 @@ public class AdopcionService(AppDbContext db)
         IQueryable<Adopcion> query = db.Adopcion
             .AsNoTracking()
             .Include(a => a.adopcionEstado)
-            .Include(a => a.animal);
+            .Include(a => a.animal)
+            ;
+            
 
         
         if (filter.usuarioId.HasValue)
@@ -22,6 +24,11 @@ public class AdopcionService(AppDbContext db)
         if (filter.adopcionEstadoId.HasValue)
         {
             query = query.Where(q => q.adopcionEstadoId == filter.adopcionEstadoId);
+        }
+
+        if (filter.organizacionId.HasValue)
+        {
+            query = query.Where(q => q.animal.organizacionId == filter.organizacionId);
         }
         
         query = query.OrderByDescending(q => q.fechaActualizacion);

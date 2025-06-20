@@ -13,5 +13,6 @@ public class AdopcionQuery
 {
     public int? usuarioId { get; set; }
     public int? adopcionEstadoId { get; set; }
+    public int? organizacionId { get; set; }
     
 }
