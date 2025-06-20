@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.Database;
 using PetsManagerMS.Services;
 using Shared;
@@ -46,6 +47,8 @@ builder.Services.AddCors(options =>
         });
 });
 
+
+builder.Services.AddScoped<Organizacion>();
 
 
 
