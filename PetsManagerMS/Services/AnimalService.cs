@@ -12,18 +12,89 @@ namespace PetsManagerMS.Services;
 public class AnimalService(AppDbContext db, Cloudinary cloudinary)
 {
 
-    public async Task<List<Animal>> List()
+    public async Task<PageResult<Animal>> List(AnimalQuery filter)
     {
-        var res = await db.Animal.AsNoTracking()
+        var query = db.Animal.AsNoTracking()
             .Include(a => a.organizacion)
             .Include(a => a.especie)
             .Include(a => a.sexo)
             .Include(a => a.nivelActividad)
             .Include(a => a.tamano)
             .Include(a => a.animalImagenes)
-            .Where(a => a.fechaEliminacion == null && a.organizacion.fechaEliminacion == null)
-            .ToListAsync();
-        return res;
+            .Where(a => a.fechaEliminacion == null && a.organizacion.fechaEliminacion == null);
+        
+        if (!string.IsNullOrEmpty(filter.search))
+        {
+            query = query.Where(a => 
+                a.nombre.Contains(filter.search));
+        }
+        
+        
+
+        if (filter.sexoId.HasValue)
+        {
+            query = query.Where(a => a.sexoId == filter.sexoId);
+        }
+
+        if (filter.nivelActividadId.HasValue)
+        {
+            query = query.Where(a => a.nivelActividadId == filter.nivelActividadId);
+        }
+        
+        if (filter.minEdad.HasValue)
+        {
+            var minDate = DateTime.Today.AddYears(-filter.minEdad.Value);
+            query = query.Where(a => a.fechaNacimiento <= minDate);
+        }
+
+        if (filter.maxEdad.HasValue)
+        {
+            var maxDate = DateTime.Today.AddYears(-filter.maxEdad.Value - 1).AddDays(1);
+            query = query.Where(a => a.fechaNacimiento >= maxDate);
+        }
+
+        if (filter.tamanoId.HasValue)
+        {
+            query = query.Where(a => a.tamanoId == filter.tamanoId);
+        }
+
+        if (filter.especieId.HasValue)
+        {
+            query = query.Where(a => a.especieId == filter.especieId);
+        }
+
+        if (filter.organizacionId.HasValue)
+        {
+            query = query.Where(a => a.organizacionId == filter.organizacionId);
+        }
+
+        if (filter.comunaId.HasValue)
+        {
+            query = query.Where(a => a.organizacion.comunaId == filter.comunaId);
+        }
+        
+        
+        
+        query = filter.sortBy?.ToLower() switch
+        {
+            "fecharegistro" => filter.sortDescending ? query.OrderByDescending(a => a.fechaRegistro) : query.OrderBy(a => a.fechaRegistro),
+            _ => query.OrderByDescending(a => a.fechaRegistro)
+        };
+
+        var totalCount = await query.CountAsync();
+        
+        var animales = await query
+            .Skip((filter.page - 1) * filter.pageSize)
+            .Take(filter.pageSize).ToListAsync();
+        
+        
+        return new PageResult<Animal>
+        {
+            items = animales,
+            totalCount = totalCount,
+            page = filter.page,
+            pageSize = filter.pageSize
+        };
     }
     
     public async Task<Animal?> GetById(int id)

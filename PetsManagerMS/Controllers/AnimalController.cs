@@ -11,9 +11,9 @@ public class AnimalController(AnimalService animalService) : ControllerBase
 
 
     [HttpGet]
-    public async Task<IActionResult> List()
+    public async Task<IActionResult> List([FromQuery]AnimalQuery query)
     {
-        var res = await animalService.List();
+        var res = await animalService.List(query);
         return Ok(res);
     }
     

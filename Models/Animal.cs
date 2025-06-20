@@ -23,5 +23,18 @@ public class Animal
     public NivelActividad nivelActividad { get; set; }
 
     public List<AnimalImagen> animalImagenes { get; set; } = [];
+    
+    public int edad
+    {
+        get
+        {
+            var today = DateTime.Today;
+            var age = today.Year - fechaNacimiento.Year;
+
+            if (fechaNacimiento.Date > today.AddYears(-age)) age--;
+
+            return age;
+        }
+    }
 
 }

@@ -15,3 +15,22 @@ public class AnimalRequest
     [Required] public int tamanoId { get; set; }
     [Required] public int nivelActividadId { get; set; }
 }
+
+public class AnimalQuery
+{
+    public string? search { get; set; }
+    public int? minEdad { get; set; }
+    public int? maxEdad { get; set; }
+    public int? sexoId { get; set; }
+    public int? nivelActividadId { get; set; }
+    public int? tamanoId { get; set; }
+    public int? especieId { get; set; }
+    public int? organizacionId { get; set; }
+    public int? comunaId { get; set; }
+    
+    public int page { get; set; } = 1;
+    public int pageSize { get; set; } = 12;
+    public string? sortBy { get; set; } = "fechaRegistro";
+    public bool sortDescending { get; set; } = true;
+    
+}
