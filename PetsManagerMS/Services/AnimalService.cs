@@ -72,7 +72,11 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
         {
             query = query.Where(a => a.organizacion.comunaId == filter.comunaId);
         }
-        
+
+        if (filter.publicado.HasValue)
+        {
+            query = query.Where(a => a.publicado == filter.publicado);
+        }
         
         
         query = filter.sortBy?.ToLower() switch

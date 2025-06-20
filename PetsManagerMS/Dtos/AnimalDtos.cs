@@ -27,6 +27,7 @@ public class AnimalQuery
     public int? especieId { get; set; }
     public int? organizacionId { get; set; }
     public int? comunaId { get; set; }
+    public bool? publicado { get; set; }
     
     public int page { get; set; } = 1;
     public int pageSize { get; set; } = 12;
