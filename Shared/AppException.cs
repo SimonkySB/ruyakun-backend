@@ -1,6 +1,6 @@
-namespace UserManagerMS.Core;
+namespace Shared;
 
-public class AppException : BadHttpRequestException
+public class AppException : Exception
 {
     
     public AppException(string message) : base(message)

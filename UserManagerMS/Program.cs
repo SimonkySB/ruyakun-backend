@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Models.Database;
-using UserManagerMS.Core;
+using Shared;
 using UserManagerMS.Services;
 
 var builder = WebApplication.CreateBuilder(args);

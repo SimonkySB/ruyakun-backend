@@ -1,11 +1,10 @@
-using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UserManagerMS.Core;
+namespace Shared;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IWebHostEnvironment host): IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger): IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {

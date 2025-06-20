@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Database;
-using UserManagerMS.Core;
+using Shared;
 using UserManagerMS.Dtos;
 
 namespace UserManagerMS.Services;

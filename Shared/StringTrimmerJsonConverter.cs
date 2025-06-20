@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace UserManagerMS.Core;
+namespace Shared;
 
 public class StringTrimmerJsonConverter : JsonConverter<string>
 {

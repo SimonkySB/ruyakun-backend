@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdoptionManagerMS", "Adopti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{A40285F6-74C8-46DC-8FA7-D5BD2A653C80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{C4C3E9A2-2277-44E5-9EFF-38974F3F78DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{A40285F6-74C8-46DC-8FA7-D5BD2A653C80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A40285F6-74C8-46DC-8FA7-D5BD2A653C80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A40285F6-74C8-46DC-8FA7-D5BD2A653C80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4C3E9A2-2277-44E5-9EFF-38974F3F78DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4C3E9A2-2277-44E5-9EFF-38974F3F78DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4C3E9A2-2277-44E5-9EFF-38974F3F78DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C3E9A2-2277-44E5-9EFF-38974F3F78DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
