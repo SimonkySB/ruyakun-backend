@@ -13,4 +13,9 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+      <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.80" />
+    </ItemGroup>
+
 </Project>
