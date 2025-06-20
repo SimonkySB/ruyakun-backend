@@ -9,6 +9,7 @@ public class Organizacion
     public string emailContacto { get; set; }
     public string direccion { get; set; }
     public int comunaId { get; set; }
+    public DateTime? fechaEliminacion { get; set; }
     
     public Comuna comuna { get; set; }
 

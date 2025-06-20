@@ -59,6 +59,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.emailContacto).HasColumnName("EMAILCONTACTO");
             opt.Property(p => p.direccion).HasColumnName("DIRECCION");
             opt.Property(p => p.comunaId).HasColumnName("COMUNAID");
+            opt.Property(p => p.fechaEliminacion).HasColumnName("FECHAELIMINACION");
             
             opt.HasOne(t => t.comuna).WithMany().HasForeignKey(t => t.comunaId);
         });
@@ -118,7 +119,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.fechaRegistro).HasColumnName("FECHAREGISTRO");
             opt.Property(p => p.fechaNacimiento).HasColumnName("FECHANACIMIENTO");
             opt.Property(p => p.publicado).HasColumnName("PUBLICADO").HasColumnType("NUMBER(1)");
-            opt.Property(p => p.descripcion).HasColumnName("DESCRIPICION").HasColumnType("CLOB");;
+            opt.Property(p => p.descripcion).HasColumnName("DESCRIPCION").HasColumnType("CLOB");;
             opt.Property(p => p.especieId).HasColumnName("ESPECIEID");
             opt.Property(p => p.sexoId).HasColumnName("SEXOID");
             opt.Property(p => p.organizacionId).HasColumnName("ORGANIZACIONID");
