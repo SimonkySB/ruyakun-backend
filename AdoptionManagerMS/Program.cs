@@ -1,3 +1,4 @@
+using AdoptionManagerMS.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-
+builder.Services.AddScoped<AdopcionService>();
 
 
 var app = builder.Build();

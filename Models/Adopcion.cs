@@ -3,6 +3,7 @@ namespace Models;
 public class Adopcion
 {
     public int adopcionId { get; set; }
+    public int animalId { get; set; }
     public int usuarioId { get; set; }
     public int adopcionEstadoId { get; set; }
     public DateTime fechaCreacion { get; set; }
@@ -11,5 +12,6 @@ public class Adopcion
     
     public Usuario usuario { get; set; }
     public AdopcionEstado adopcionEstado { get; set; }
+    public Animal animal { get; set; }
     public List<Seguimiento> seguimientos { get; set; } = [];
 }

@@ -1,0 +1,45 @@
+using AdoptionManagerMS.Dtos;
+using AdoptionManagerMS.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace AdoptionManagerMS.Controllers;
+
+
+[ApiController]
+[Route("adopciones")]
+public class AdopcionController(AdopcionService adopcionService) : ControllerBase
+{
+
+    [HttpGet]
+    public async Task<ActionResult> List([FromQuery] AdopcionQuery query)
+    {
+        var res = await adopcionService.List(query);
+        return Ok(res);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetById(int id)
+    {
+        var res = await adopcionService.GetById(id);
+        if (res == null)
+        {
+            return NotFound("Adopcion no encontrada");
+        }
+        return Ok(res);
+    }
+
+    [HttpPost("solicitar")]
+    public async Task<ActionResult> Solicitar(AdopcionSolicitarRequest request)
+    {
+        var res = await adopcionService.Solicitar(request);
+        return Ok(res);
+    }
+
+
+    [HttpGet("estados")]
+    public async Task<ActionResult> ListEstados()
+    {
+        var res = await adopcionService.ListAdopcionEstados();
+        return Ok(res);
+    }
+}
