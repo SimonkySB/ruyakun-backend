@@ -38,7 +38,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.username).HasColumnName("USERNAME");
             opt.Property(p => p.nombres).HasColumnName("NOMBRES");
             opt.Property(p => p.apellidos).HasColumnName("APELLIDOS");
-            opt.Property(p => p.activo).HasColumnName("ACTIVO").HasColumnType("NUMBER(1)");;
+            opt.Property(p => p.activo).HasColumnName("ACTIVO").HasColumnType("NUMBER(1)").HasConversion(v => v ? 1 : 0, v => v == 1);
             opt.Property(p => p.fechaCreacion).HasColumnName("FECHACREACION");
             opt.Property(p => p.direccion).HasColumnName("DIRECCION");
             opt.Property(p => p.telefono).HasColumnName("TELEFONO");
@@ -118,7 +118,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.peso).HasColumnName("PESO").HasColumnType("NUMBER(10,1)");;
             opt.Property(p => p.fechaRegistro).HasColumnName("FECHAREGISTRO");
             opt.Property(p => p.fechaNacimiento).HasColumnName("FECHANACIMIENTO");
-            opt.Property(p => p.publicado).HasColumnName("PUBLICADO").HasColumnType("NUMBER(1)");
+            opt.Property(p => p.publicado).HasColumnName("PUBLICADO").HasColumnType("NUMBER(1)").HasConversion(v => v ? 1 : 0, v => v == 1);
             opt.Property(p => p.descripcion).HasColumnName("DESCRIPCION").HasColumnType("CLOB");;
             opt.Property(p => p.especieId).HasColumnName("ESPECIEID");
             opt.Property(p => p.sexoId).HasColumnName("SEXOID");
@@ -175,6 +175,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.ToTable("ADOPCION");
     
             opt.Property(p => p.adopcionId).HasColumnName("ADOPCIONID");
+            opt.Property(p => p.animalId).HasColumnName("ANIMALID");
             opt.Property(p => p.usuarioId).HasColumnName("USUARIOID");
             opt.Property(p => p.adopcionEstadoId).HasColumnName("ADOPCIONESTADOID");
             opt.Property(p => p.fechaCreacion).HasColumnName("FECHACREACION");
@@ -183,6 +184,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             
             opt.HasOne(t => t.usuario).WithMany().HasForeignKey(t => t.usuarioId);
             opt.HasOne(t => t.adopcionEstado).WithMany().HasForeignKey(t => t.adopcionEstadoId);
+            opt.HasOne(t => t.animal).WithMany().HasForeignKey(t => t.animalId);
         });
         
         
