@@ -48,7 +48,8 @@ builder.Services.AddCors(options =>
 });
 
 
-builder.Services.AddScoped<Organizacion>();
+builder.Services.AddScoped<OrganizacionService>();
+builder.Services.AddScoped<AnimalService>();
 
 
 
