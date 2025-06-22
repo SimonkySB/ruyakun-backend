@@ -5,7 +5,7 @@ using Models.Database;
 
 namespace AdoptionManagerMS.Services;
 
-public class AdopcionService(AppDbContext db)
+public class AdopcionService(AppDbContext db, EventGridService eventGridService)
 {
     public async Task<List<Adopcion>> List(AdopcionQuery filter)
     {
@@ -74,9 +74,27 @@ public class AdopcionService(AppDbContext db)
             fechaActualizacion = DateTime.UtcNow,
             descripcionFamilia = request.descripcionFamilia,
         };
+
+       
         
         await db.Adopcion.AddAsync(adopcion);
         await db.SaveChangesAsync();
+        
+        await eventGridService.PublishEventAsync(
+            "Adopcion.Solicitada",
+            new
+            {
+                emailAdoptante = user.username,
+                contenido = $"""
+                    <h2>Felicidades ${user.nombres}. Se he registrado tu solicitud para adoptar a {animal.nombre}</h2>
+                    <h4>Pronto estaremos en contacto!</h4>
+                """,
+                asunto = "Solicitud de adopción",
+                
+            },
+            $"adopciones/${adopcion.adopcionId}"
+        );
+        
         return await GetById(adopcion.adopcionId);
 
     }

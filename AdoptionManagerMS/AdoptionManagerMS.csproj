@@ -18,4 +18,8 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Azure.Messaging.EventGrid" Version="4.31.0" />
+    </ItemGroup>
+
 </Project>
