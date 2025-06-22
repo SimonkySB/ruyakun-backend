@@ -35,18 +35,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 });
 
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("dev",
-        policy =>
-        {
-            policy
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-
-        });
-});
+builder.Services.AddAppCors();
 
 
 builder.Services.AddScoped<UsuarioService>();
@@ -55,10 +44,8 @@ builder.Services.AddScoped<UsuarioService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseCors("dev");
-}
+
+app.UseCors("app");
 
 app.UseExceptionHandler();
 
