@@ -86,7 +86,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
             {
                 emailAdoptante = user.username,
                 contenido = $"""
-                    <h2>Felicidades ${user.nombres}. Se he registrado tu solicitud para adoptar a {animal.nombre}</h2>
+                    <h2>Felicidades {user.nombres}. Se he registrado tu solicitud para adoptar a {animal.nombre}</h2>
                     <h4>Pronto estaremos en contacto!</h4>
                 """,
                 asunto = "Solicitud de adopción",

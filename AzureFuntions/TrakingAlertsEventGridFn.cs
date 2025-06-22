@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text.Json;
 using Azure.Messaging;
+using Azure.Messaging.EventGrid;
 using AzureFuntions.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -31,12 +32,12 @@ public class TrakingAlertsEventGridFn
     }
 
     [Function("TrakingAlertsEventGridFn")]
-    public async Task Run([EventGridTrigger] CloudEvent cloudEvent)
+    public async Task Run([EventGridTrigger] EventGridEvent  cloudEvent)
     {
-        _logger.LogInformation("Event type: {type}, Event subject: {subject}", cloudEvent.Type, cloudEvent.Subject);
+        _logger.LogInformation("Event type: {type}, Event subject: {subject}", cloudEvent.EventType, cloudEvent.Subject);
         try
         {
-            if (cloudEvent.Type == "Adopcion.Solicitada")
+            if (cloudEvent.EventType == "Adopcion.Solicitada")
             {
                 var options = new JsonSerializerOptions
                 {
