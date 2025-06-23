@@ -1,0 +1,87 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  
+  vmConnectionName: 'rukayun-service-connection'
+  deploymentPath: '/app'
+
+stages:
+- stage: Deploy
+  displayName: 'Deploy to VM'
+  jobs:
+  - deployment: DeployToVM
+    displayName: 'Deploy with Docker Compose'
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CopyFilesOverSSH@0
+            displayName: 'Copy project files to VM'
+            inputs:
+              sshEndpoint: $(vmConnectionName)
+              sourceFolder: '$(Build.SourcesDirectory)'
+              contents: |
+                compose.yml
+                **/Dockerfile
+                **/*
+                !.git/**
+                !.gitignore
+                !README.md
+              targetFolder: $(deploymentPath)
+              overwrite: true
+          - task: SSH@0
+            displayName: 'Deploy with Docker Compose'
+            inputs:
+              sshEndpoint: $(vmConnectionName)
+              runOptions: 'inline'
+              inline: |
+                cd $(deploymentPath)
+                
+                echo "=== Verificando Docker y Docker Compose ==="
+                docker --version
+                docker-compose --version
+                
+                echo "=== Deteniendo contenedores existentes ==="
+                docker-compose down --remove-orphans || true
+
+                docker container prune -f
+                
+                echo "=== Eliminando imágenes anteriores ==="
+                
+                docker rmi usermanagerms:latest || true
+                docker rmi petsmanagerms:latest || true
+                docker rmi adoptionmanagerms:latest || true
+                docker rmi usermanagerms || true
+                docker rmi petsmanagerms || true
+                docker rmi adoptionmanagerms || true
+                
+                echo "=== Limpiando imágenes huérfanas y cachés ==="
+                docker image prune -f
+                docker builder prune -f
+                
+                echo "=== Construyendo nuevas imágenes ==="
+                docker-compose build --no-cache
+                
+                echo "=== Iniciando servicios ==="
+                docker-compose up -d
+                
+                echo "=== Verificando estado de los servicios ==="
+                sleep 10
+                docker-compose ps
+                
+                echo "=== Verificando logs de los servicios ==="
+                docker-compose logs --tail=20
+                
+                
+                echo "=== Despliegue completado ==="
+          
