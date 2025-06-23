@@ -6,6 +6,8 @@ services:
       dockerfile: UserManagerMS/Dockerfile
     ports:
       - "5001:5001"
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
   petsmanagerms:
     image: petsmanagerms
     build:
@@ -13,6 +15,8 @@ services:
       dockerfile: PetsManagerMS/Dockerfile
     ports:
       - "5002:5002"
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
   adoptionmanagerms:
     image: adoptionmanagerms
     build:
@@ -20,3 +24,5 @@ services:
       dockerfile: AdoptionManagerMS/Dockerfile
     ports:
       - "5003:5003"
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5003
