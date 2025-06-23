@@ -69,7 +69,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         {
             animalId = request.animalId,
             usuarioId = request.usuarioId,
-            adopcionEstadoId = (int)AdopcionEstadoEnum.Solicitado,
+            adopcionEstadoId = (int)AdopcionEstadoEnum.Pendiente,
             fechaCreacion = DateTime.UtcNow,
             fechaActualizacion = DateTime.UtcNow,
             descripcionFamilia = request.descripcionFamilia,

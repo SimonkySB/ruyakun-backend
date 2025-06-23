@@ -8,10 +8,7 @@ public class AdopcionEstado
 
 public enum AdopcionEstadoEnum
 {
-    Solicitado = 10,
-    EnEvaluacion = 20,
-    Adoptado = 30,
-    Rechazada = 90,
-    Cancelada = 95
-    
+    Pendiente = 10,
+    Aprobada = 20,
+    Rechazada = 90
 }
