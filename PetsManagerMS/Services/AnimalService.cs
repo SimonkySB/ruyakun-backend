@@ -144,6 +144,16 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
         await VerifyRequest(request);
         var animal = await GetByIdOrException(id);
 
+        if (request.publicado)
+        {
+            var adopciones = await db.Adopcion.AsNoTracking()
+                .Where(a => a.animalId == id && a.adopcionEstadoId == (int)AdopcionEstadoEnum.Aprobada)
+                .ToListAsync();
+            
+            throw new AppException("No es posible publicar el animal, ya se encuentra adoptado.");
+
+        }
+
         animal.nombre = request.nombre;
         animal.peso = request.peso;
         animal.fechaNacimiento = request.fechaNacimiento;

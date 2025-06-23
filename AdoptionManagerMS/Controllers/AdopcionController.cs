@@ -35,6 +35,20 @@ public class AdopcionController(AdopcionService adopcionService) : ControllerBas
         return Ok(res);
     }
 
+    [HttpPost("{id}/aprobar")]
+    public async Task<ActionResult> Aprobar(int id)
+    {
+        var res = await adopcionService.Aprobar(id);
+        return Ok(res);
+    }
+  
+    [HttpPost("{id}/rechazar")]
+    public async Task<ActionResult> Rechazar(int id)
+    {
+        var res = await adopcionService.Rechazar(id);
+        return Ok(res);
+    }
+  
 
     [HttpGet("estados")]
     public async Task<ActionResult> ListEstados()
