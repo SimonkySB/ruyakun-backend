@@ -12,7 +12,7 @@ pool:
 variables:
   
   vmConnectionName: 'rukayun-service-connection'
-  deploymentPath: '/app'
+  deploymentPath: '~/app'
 
 stages:
 - stage: Deploy
