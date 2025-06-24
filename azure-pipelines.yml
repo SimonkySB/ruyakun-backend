@@ -30,13 +30,7 @@ stages:
             inputs:
               sshEndpoint: $(vmConnectionName)
               sourceFolder: '$(Build.SourcesDirectory)'
-              contents: |
-                compose.yaml
-                **/Dockerfile
-                **/*
-                !.git/**
-                !.gitignore
-                !README.md
+              contents: '**'
               targetFolder: $(deploymentPath)
               overwrite: true
           - task: SSH@0
