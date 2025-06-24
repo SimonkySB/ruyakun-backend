@@ -31,7 +31,7 @@ stages:
               sshEndpoint: $(vmConnectionName)
               sourceFolder: '$(Build.SourcesDirectory)'
               contents: |
-                compose.yml
+                compose.yaml
                 **/Dockerfile
                 **/*
                 !.git/**
