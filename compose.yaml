@@ -1,6 +1,7 @@
 services:
   usermanagerms:
     image: usermanagerms
+    container_name: usermanagerms
     build:
       context: .
       dockerfile: UserManagerMS/Dockerfile
@@ -10,6 +11,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5001
   petsmanagerms:
     image: petsmanagerms
+    container_name: petsmanagerms
     build:
       context: .
       dockerfile: PetsManagerMS/Dockerfile
@@ -19,6 +21,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5002
   adoptionmanagerms:
     image: adoptionmanagerms
+    container_name: adoptionmanagerms
     build:
       context: .
       dockerfile: AdoptionManagerMS/Dockerfile
