@@ -12,9 +12,9 @@ public class UsuarioController(UsuarioService usuarioService) : ControllerBase
 {
 
    [HttpGet]
-   public async Task<ActionResult> List()
+   public async Task<ActionResult> List([FromQuery] UsuarioQuery query)
    {
-      var res = await usuarioService.List();
+      var res = await usuarioService.List(query);
       return Ok(res);
    }
 

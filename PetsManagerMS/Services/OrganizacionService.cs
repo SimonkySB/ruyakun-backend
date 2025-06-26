@@ -8,24 +8,57 @@ namespace PetsManagerMS.Services;
 
 public class OrganizacionService(AppDbContext db)
 {
-    public async Task<List<Organizacion>> List()
+    public async Task<List<OrganizacionResponse>> List()
     {
         var res = await db.Organizacion.AsNoTracking()
             .Include(o => o.comuna)
+            .Select(o => new OrganizacionResponse
+            {
+                organizacionId = o.organizacionId,
+                nombre = o.nombre,
+                nombreContacto = o.nombreContacto,
+                telefonoContacto = o.telefonoContacto,
+                emailContacto = o.emailContacto,
+                direccion = o.direccion,
+                fechaEliminacion = o.fechaEliminacion,
+                comuna = new OrganizacionComunaResponse()
+                {
+                    comunaId = o.comunaId,
+                    nombre = o.comuna.nombre,
+                },
+                usuariosId = o.organizacionUsuarios.Select(u => u.usuarioId).ToList(),
+            })
             .Where(a => a.fechaEliminacion == null).ToListAsync();
         return res;
     }
     
-    public async Task<Organizacion?> GetById(int id)
+    public async Task<OrganizacionResponse?> GetById(int id)
     {
         var res = await db.Organizacion.AsNoTracking()
             .Include(o => o.comuna)
+            .Include(o => o.organizacionUsuarios)
             .Where(a => a.fechaEliminacion == null && a.organizacionId == id)
+            .Select(o => new OrganizacionResponse
+            {
+                organizacionId = o.organizacionId,
+                nombre = o.nombre,
+                nombreContacto = o.nombreContacto,
+                telefonoContacto = o.telefonoContacto,
+                emailContacto = o.emailContacto,
+                direccion = o.direccion,
+                fechaEliminacion = o.fechaEliminacion,
+                comuna = new OrganizacionComunaResponse()
+                {
+                    comunaId = o.comunaId,
+                    nombre = o.comuna.nombre,
+                },
+                usuariosId = o.organizacionUsuarios.Select(u => u.usuarioId).ToList(),
+            })
             .FirstOrDefaultAsync();
         return res;
     }
     
-    public async Task<Organizacion?> Crear(OrganizacionRequest request)
+    public async Task<OrganizacionResponse?> Crear(OrganizacionRequest request)
     {
 
         await VerifyRequest(0, request);
@@ -46,7 +79,7 @@ public class OrganizacionService(AppDbContext db)
         return await GetById(organizacion.organizacionId);
     }
 
-    public async Task<Organizacion?> Editar(int id, OrganizacionRequest request)
+    public async Task<OrganizacionResponse?> Editar(int id, OrganizacionRequest request)
     {
         await VerifyRequest(id, request);
         var organizacion = await GetByIdOrException(id);
@@ -79,8 +112,52 @@ public class OrganizacionService(AppDbContext db)
         
         await db.SaveChangesAsync();
     }
+
+
+    public async Task AgregarUsuario(int organizacionId, int usuarioId)
+    {
+        var orgUsuario = await db.OrganizacionUsuario
+            .Where(o => o.usuarioId == usuarioId)
+            .FirstOrDefaultAsync();
+        if (orgUsuario != null)
+        {
+            throw new AppException("El usuario ya se encuentra en una organización");
+        }
+        
+        var org = await db.Organizacion.AsNoTracking()
+            .FirstOrDefaultAsync(o => o.organizacionId == organizacionId && o.fechaEliminacion == null);
+        if (org == null)
+        {
+            throw new AppException("No se encuentra la organizacion");
+        }
+        
+        var usuario = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(o => o.usuarioId == usuarioId);
+        if (usuario == null)
+        {
+            throw new AppException("Usuario no existe");
+        }
+        await db.OrganizacionUsuario.AddAsync(new ()
+        {
+            organizacionId = organizacionId,
+            usuarioId = usuarioId
+        });
+        
+        await db.SaveChangesAsync();
+    }
     
-    
+    public async Task QuitarUsuario(int organizacionId, int usuarioId)
+    {
+        
+        var orgUsuario = await db.OrganizacionUsuario
+            .Where(o => o.organizacionId == organizacionId && o.usuarioId == usuarioId)
+            .FirstOrDefaultAsync();
+        if (orgUsuario == null)
+        {
+            throw new AppException("El usuario no se encuentra en la organización");
+        }
+        db.OrganizacionUsuario.Remove(orgUsuario);
+        await db.SaveChangesAsync();
+    }
 
     private async Task VerifyRequest(int id, OrganizacionRequest request)
     {

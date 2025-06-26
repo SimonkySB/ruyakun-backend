@@ -9,27 +9,69 @@ namespace UserManagerMS.Services;
 public class UsuarioService(AppDbContext db)
 {
 
-    public async Task<List<Usuario>> List()
+    public async Task<List<UsuarioResponse>> List(UsuarioQuery query)
     {
-        var res = await db.Usuario
+        IQueryable<Usuario> res = db.Usuario
             .AsNoTracking()
             .Include(u => u.comuna)
-            .ToListAsync();
+            .Include(u => u.organizacionUsuarios);
+            
+
+        if (query.organizacionId.HasValue)
+        {
+            res = res.Where(u => u.organizacionUsuarios
+                .Count(uo => uo.organizacionId == query.organizacionId.Value) > 0);
+        }
+            
+            
       
-        return res;
+        return await res.Select(u => new UsuarioResponse()
+        {
+            usuarioId = u.usuarioId,
+            username = u.username,
+            nombres = u.nombres,
+            apellidos = u.apellidos,
+            activo = u.activo,
+            fechaCreacion = u.fechaCreacion,
+            direccion = u.direccion,
+            telefono = u.telefono,
+            telefono2 = u.telefono2,
+            comuna = new UsuarioComunaResponse()
+            {
+                comunaId = u.comunaId,
+                nombre = u.comuna.nombre,
+            }
+        }).ToListAsync();
     } 
     
-    public async Task<Usuario?> GetById(int id)
+    public async Task<UsuarioResponse?> GetById(int id)
     {
         var res = await db.Usuario
             .AsNoTracking()
             .Include(u => u.comuna)
+            .Select(u => new UsuarioResponse()
+            {
+                usuarioId = u.usuarioId,
+                username = u.username,
+                nombres = u.nombres,
+                apellidos = u.apellidos,
+                activo = u.activo,
+                fechaCreacion = u.fechaCreacion,
+                direccion = u.direccion,
+                telefono = u.telefono,
+                telefono2 = u.telefono2,
+                comuna = new UsuarioComunaResponse()
+                {
+                    comunaId = u.comunaId,
+                    nombre = u.comuna.nombre,
+                }
+            })
             .FirstOrDefaultAsync(u => u.usuarioId == id);
 
         return res;
     }
 
-    public async Task<Usuario?> Crear(UsuarioRequest request)
+    public async Task<UsuarioResponse?> Crear(UsuarioRequest request)
     {
         var exists = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.username == request.username);
         if (exists != null)
@@ -62,7 +104,7 @@ public class UsuarioService(AppDbContext db)
         return await GetById(user.usuarioId);
     }
 
-    public async Task<Usuario?> Editar(int id, UsuarioRequest request)
+    public async Task<UsuarioResponse?> Editar(int id, UsuarioRequest request)
     {
         
         var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == request.comunaId);

@@ -47,4 +47,19 @@ public class OrganizacionController(OrganizacionService organizacionService) : C
         await organizacionService.Eliminar(id);
         return NoContent();
     }
+
+
+    [HttpPost("{organizacionId}/usuarios/{usuarioId}")]
+    public async Task<IActionResult> AgregarUsuario(int organizacionId, int usuarioId)
+    {
+        await organizacionService.AgregarUsuario(organizacionId, usuarioId);
+        return Ok();
+    }
+    
+    [HttpDelete("{organizacionId}/usuarios/{usuarioId}")]
+    public async Task<IActionResult> QuitarUsuario(int organizacionId, int usuarioId)
+    {
+        await organizacionService.QuitarUsuario(organizacionId, usuarioId);
+        return NoContent();
+    }
 }
