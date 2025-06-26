@@ -202,6 +202,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             opt.Property(p => p.observacion).HasColumnName("OBSERVACION");
             opt.Property(p => p.fechaActualizacion).HasColumnName("FECHAACTUALIZACION");
             opt.Property(p => p.fechaCierre).HasColumnName("FECHACIERRE");
+            opt.Property(p => p.mensajeAdoptante).HasColumnName("MENSAJEADOPTANTE");
             
             opt.HasOne(t => t.adopcion).WithMany(t => t.seguimientos).HasForeignKey(t => t.adopcionId);
             opt.HasOne(t => t.seguimientoTipo).WithMany().HasForeignKey(t => t.seguimientoTipoId);

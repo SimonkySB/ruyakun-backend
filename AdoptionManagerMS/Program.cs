@@ -38,6 +38,7 @@ builder.Services.AddAppCors();
 
 
 builder.Services.AddScoped<AdopcionService>();
+builder.Services.AddScoped<SeguimientoService>();
 builder.Services.AddScoped<EventGridService>();
 
 
