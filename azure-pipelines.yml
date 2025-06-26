@@ -12,7 +12,7 @@ pool:
 variables:
   
   vmConnectionName: 'rukayun-service-connection'
-  deploymentPath: '/app'
+  deploymentPath: '~/app'
 
 stages:
 - stage: Deploy
@@ -30,13 +30,7 @@ stages:
             inputs:
               sshEndpoint: $(vmConnectionName)
               sourceFolder: '$(Build.SourcesDirectory)'
-              contents: |
-                compose.yml
-                **/Dockerfile
-                **/*
-                !.git/**
-                !.gitignore
-                !README.md
+              contents: '**'
               targetFolder: $(deploymentPath)
               overwrite: true
           - task: SSH@0
@@ -54,21 +48,9 @@ stages:
                 echo "=== Deteniendo contenedores existentes ==="
                 docker-compose down --remove-orphans || true
 
-                docker container prune -f
-                
-                echo "=== Eliminando imágenes anteriores ==="
-                
-                docker rmi usermanagerms:latest || true
-                docker rmi petsmanagerms:latest || true
-                docker rmi adoptionmanagerms:latest || true
-                docker rmi usermanagerms || true
-                docker rmi petsmanagerms || true
-                docker rmi adoptionmanagerms || true
-                
-                echo "=== Limpiando imágenes huérfanas y cachés ==="
-                docker image prune -f
-                docker builder prune -f
-                
+                echo "=== Limpieza completa (incluyendo imágenes) ==="
+                docker system prune -a -f 
+                                
                 echo "=== Construyendo nuevas imágenes ==="
                 docker-compose build --no-cache
                 
