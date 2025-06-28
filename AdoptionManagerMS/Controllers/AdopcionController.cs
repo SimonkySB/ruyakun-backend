@@ -48,6 +48,13 @@ public class AdopcionController(AdopcionService adopcionService) : ControllerBas
         var res = await adopcionService.Rechazar(id);
         return Ok(res);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        await adopcionService.Eliminar(id);
+        return NoContent();
+    }
   
 
     [HttpGet("estados")]

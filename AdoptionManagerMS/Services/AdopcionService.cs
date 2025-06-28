@@ -209,9 +209,24 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         return await GetById(adopcion.adopcionId);
         
     }
+    
+    
+    public async Task Eliminar(int id)
+    {
+        var adopcion = await db.Adopcion
+            .FirstOrDefaultAsync(a => a.adopcionId == id);
+        if (adopcion == null)
+        {
+            throw new AppException("Adopcion no encontrada");
+        }
+        db.Adopcion.Remove(adopcion);
+        await db.SaveChangesAsync();
+    }
 
     public async Task<List<AdopcionEstado>> ListAdopcionEstados()
     {
         return await db.AdopcionEstado.AsNoTracking().ToListAsync();
     }
+
+    
 }
