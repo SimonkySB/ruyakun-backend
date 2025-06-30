@@ -56,6 +56,10 @@ public static class SecurityExtensions
             {
                 P.RequireClaim("extension_Roles", Policies.Admin, Policies.Colaborator, Policies.User);
             });
+            opt.AddPolicy(Policies.SuperAdminOrAdmin, P =>
+            {
+                P.RequireClaim("extension_Roles", Policies.Admin, Policies.SuperAdmin);
+            });
         });
         return services;
     }
@@ -63,12 +67,12 @@ public static class SecurityExtensions
     
     public static string GetName(this ClaimsPrincipal principal)
     {
-        return principal.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value ?? "";
+        return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value ?? "";
     }
     
     public static string GetSurname(this ClaimsPrincipal principal)
     {
-        return principal.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value ?? "";
+        return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value ?? "";
     }
     
     public static string GetUsername(this ClaimsPrincipal principal)
@@ -80,7 +84,7 @@ public static class SecurityExtensions
         return principal.Claims.FirstOrDefault(c => c.Type == "extension_Roles")?.Value ?? "";
     }
 
-    public static bool iSSuperAdmin(this ClaimsPrincipal principal)
+    public static bool ISSuperAdmin(this ClaimsPrincipal principal)
     {
         return principal.GetUserRole() == Policies.SuperAdmin; 
     }
@@ -105,7 +109,9 @@ public static class Policies
     public const string Admin = "ADMIN";
     public const string User = "USER";
     public const string Colaborator = "COLABORATOR";
+    
     public const string AdminOrColaborator = "ADMIN_OR_COLABORATOR";
+    public const string SuperAdminOrAdmin = "SUPER_ADMIN_OR_ADMIN";
     public const string AnyRole = "ANY_ROLE";
 }
 
