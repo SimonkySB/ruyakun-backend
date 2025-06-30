@@ -53,7 +53,7 @@ public class UsuarioService(AppDbContext db)
         }
 
         var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == usuario.comunaId);
-        if (comuna == null)
+        if (usuario.comunaId != null && comuna == null)
         {
             throw new AppException("Comuna no encontrada");
         }
@@ -74,12 +74,12 @@ public class UsuarioService(AppDbContext db)
         }
         
         var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == usuario.comunaId);
-        if (comuna == null)
+        if (usuario.comunaId != null && comuna == null)
         {
             throw new AppException("Comuna no encontrada");
         }
 
-        var user = await db.Usuario.FirstOrDefaultAsync(u => u.usuarioId == usuario.usuarioId);
+        var user = await db.Usuario.AsTracking().FirstOrDefaultAsync(u => u.usuarioId == usuario.usuarioId);
 
         if (user == null)
         {
