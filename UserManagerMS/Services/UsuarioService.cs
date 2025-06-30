@@ -9,128 +9,87 @@ namespace UserManagerMS.Services;
 public class UsuarioService(AppDbContext db)
 {
 
-    public async Task<List<UsuarioResponse>> List(UsuarioQuery query)
+    public async Task<List<Usuario>> List(UsuarioQuery query)
     {
         IQueryable<Usuario> res = db.Usuario
             .AsNoTracking()
             .Include(u => u.comuna)
             .Include(u => u.organizacionUsuarios);
-            
+
 
         if (query.organizacionId.HasValue)
         {
             res = res.Where(u => u.organizacionUsuarios
                 .Count(uo => uo.organizacionId == query.organizacionId.Value) > 0);
         }
-            
-            
-      
-        return await res.Select(u => new UsuarioResponse()
-        {
-            usuarioId = u.usuarioId,
-            username = u.username,
-            nombres = u.nombres,
-            apellidos = u.apellidos,
-            activo = u.activo,
-            fechaCreacion = u.fechaCreacion,
-            direccion = u.direccion,
-            telefono = u.telefono,
-            telefono2 = u.telefono2,
-            comuna = new UsuarioComunaResponse()
-            {
-                comunaId = u.comunaId,
-                nombre = u.comuna.nombre,
-            }
-        }).ToListAsync();
-    } 
-    
-    public async Task<UsuarioResponse?> GetById(int id)
+
+        return await res.ToListAsync();
+    }
+
+    public async Task<Usuario?> GetById(int id)
+    {
+        return await db.Usuario
+            .Include(u => u.comuna)
+            .FirstOrDefaultAsync(u => u.usuarioId == id);
+    }
+
+    public async Task<Usuario?> GetByEmail(string email)
     {
         var res = await db.Usuario
-            .AsNoTracking()
             .Include(u => u.comuna)
-            .Select(u => new UsuarioResponse()
-            {
-                usuarioId = u.usuarioId,
-                username = u.username,
-                nombres = u.nombres,
-                apellidos = u.apellidos,
-                activo = u.activo,
-                fechaCreacion = u.fechaCreacion,
-                direccion = u.direccion,
-                telefono = u.telefono,
-                telefono2 = u.telefono2,
-                comuna = new UsuarioComunaResponse()
-                {
-                    comunaId = u.comunaId,
-                    nombre = u.comuna.nombre,
-                }
-            })
-            .FirstOrDefaultAsync(u => u.usuarioId == id);
-
+            .FirstOrDefaultAsync(u => u.username == email);
         return res;
     }
 
-    public async Task<UsuarioResponse?> Crear(UsuarioRequest request)
+    public async Task<Usuario?> Crear(Usuario usuario)
     {
-        var exists = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.username == request.username);
+        usuario.fechaCreacion = DateTime.UtcNow;
+        
+        var exists = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.username == usuario.username);
         if (exists != null)
         {
             throw new AppException("El nombre de usuario se encuentra en uso");
-            
+
         }
-      
-        var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == request.comunaId);
+
+        var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == usuario.comunaId);
         if (comuna == null)
         {
             throw new AppException("Comuna no encontrada");
         }
         
-        Usuario user = new()
-        {
-            username = request.username,
-            nombres = request.nombres,
-            apellidos = request.apellidos,
-            activo = request.activo,
-            fechaCreacion = DateTime.UtcNow,
-            direccion = request.direccion,
-            telefono = request.telefono,
-            telefono2 = request.telefono2,
-            comunaId = request.comunaId
-        };
-      
-        await db.Usuario.AddAsync(user);
+        await db.Usuario.AddAsync(usuario);
         await db.SaveChangesAsync();
-        return await GetById(user.usuarioId);
+        return await GetById(usuario.usuarioId);
     }
 
-    public async Task<UsuarioResponse?> Editar(int id, UsuarioRequest request)
+    public async Task<Usuario?> Editar(Usuario usuario)
     {
+
+        var exists = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(u => u.username == usuario.username && u.usuarioId != usuario.usuarioId);
+        if (exists != null)
+        {
+            throw new AppException("El nombre de usuario se encuentra en uso");
+
+        }
         
-        var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == request.comunaId);
+        var comuna = await db.Comuna.AsNoTracking().FirstOrDefaultAsync(c => c.comunaId == usuario.comunaId);
         if (comuna == null)
         {
             throw new AppException("Comuna no encontrada");
         }
-        
-        var user = await db.Usuario.FirstOrDefaultAsync(u => u.usuarioId == id);
+
+        var user = await db.Usuario.FirstOrDefaultAsync(u => u.usuarioId == usuario.usuarioId);
 
         if (user == null)
         {
             throw new AppException("Usuario no encontrado");
         }
         
-        user.nombres = request.nombres;
-        user.apellidos = request.apellidos;
-        user.direccion = request.direccion;
-        user.activo = request.activo;
-        user.telefono = request.telefono;
-        user.telefono2 = request.telefono2;
-        user.comunaId = request.comunaId;
-        
         await db.SaveChangesAsync();
         return await GetById(user.usuarioId);
-        
+
     }
-    
+
+
 }

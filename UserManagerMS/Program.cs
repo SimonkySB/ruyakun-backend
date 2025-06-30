@@ -40,6 +40,7 @@ builder.Services.AddAppCors();
 
 builder.Services.AddScoped<UsuarioService>();
 
+builder.Services.AddSecurityExtensions();
 
 
 var app = builder.Build();
