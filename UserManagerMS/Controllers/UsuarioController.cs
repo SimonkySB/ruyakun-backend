@@ -80,24 +80,28 @@ public class UsuarioController(UsuarioService usuarioService) : ControllerBase
       
       return Ok(ToResponse(res));
    }
+   
+   
 
 
    [HttpGet("perfil")]
    public async Task<ActionResult> GetPerfil()
    {
       string username = User.GetUsername();
+      string rol = User.GetUserRole();
       var usuario = await usuarioService.GetByEmail(username);
       if (usuario == null)
       {
          return NotFound("Usuario no encontrado");
       }
-      return Ok(ToResponse(usuario));
+      return Ok(ToResponse(usuario, rol));
    }
 
    [HttpPut("perfil")]
    public async Task<ActionResult> EditarPerfil(UsuarioProfileRequest request)
    {
       string username = User.GetUsername();
+      string rol = User.GetUserRole();
       var usuario = await usuarioService.GetByEmail(username);
       
       if (usuario == null)
@@ -113,16 +117,17 @@ public class UsuarioController(UsuarioService usuarioService) : ControllerBase
       usuario.comunaId = request.comunaId;
       
       var res = await usuarioService.Editar(usuario);  
-      return Ok(ToResponse(res));
+      return Ok(ToResponse(res, rol));
    }
    
 
-   [HttpPost("verificar")]
+   [HttpPost("perfil/verificar")]
    public async Task<ActionResult> Verificar()
    {
       string username = User.GetUsername();
       string name = User.GetName();
       string surname = User.GetSurname();
+      string rol = User.GetUserRole();
       
       var usuario = await usuarioService.GetByEmail(username);
       if (usuario == null)
@@ -137,22 +142,22 @@ public class UsuarioController(UsuarioService usuarioService) : ControllerBase
             direccion = "",
             telefono = "",
             telefono2 = "",
-            comunaId = 1
+            comunaId = null
          });
-         return Ok(ToResponse(nuevo));
+         return Ok(ToResponse(nuevo, rol));
       }
       else
       {
          usuario.nombres = name;
          usuario.apellidos = surname;
          var res = await usuarioService.Editar(usuario);  
-         return Ok(ToResponse(res));
+         return Ok(ToResponse(res, rol));
       }
       
    }
 
 
-   private UsuarioResponse? ToResponse(Usuario? u)
+   private UsuarioResponse? ToResponse(Usuario? u, string rol = "")
    {
       if (u == null)
       {
@@ -169,11 +174,8 @@ public class UsuarioController(UsuarioService usuarioService) : ControllerBase
          direccion = u.direccion,
          telefono = u.telefono,
          telefono2 = u.telefono2,
-         comuna = new UsuarioComunaResponse()
-         {
-            comunaId = u.comunaId,
-            nombre = u.comuna.nombre,
-         }
+         comuna = u.comuna,
+         rol = rol
       };
    }
 }
