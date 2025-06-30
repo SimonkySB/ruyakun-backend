@@ -8,15 +8,9 @@ namespace AdoptionManagerMS.Services;
 
 public class AdopcionService(AppDbContext db, EventGridService eventGridService)
 {
-    public async Task<List<Adopcion>> List(AdopcionQuery filter)
+    public async Task<object> List(AdopcionQuery filter)
     {
-        IQueryable<Adopcion> query = db.Adopcion
-            .AsNoTracking()
-            .Include(a => a.adopcionEstado)
-            .Include(a => a.animal)
-            ;
-            
-
+        IQueryable<Adopcion> query = GetQuery();
         
         if (filter.usuarioId.HasValue)
         {
@@ -34,20 +28,56 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         
         query = query.OrderByDescending(q => q.fechaActualizacion);
         
-        return await query.ToListAsync();
+        var data = await query.ToListAsync();
+        return data.Select(r => ToResponse(r)).ToList();
     }
 
-    public async Task<Adopcion?> GetById(int id)
+    public async Task<List<object>> ListByAdminColaborador(int usuarioId)
     {
-        var adopcion = await db.Adopcion
-            .AsNoTracking()
-            .Include(a => a.adopcionEstado)
-            .Include(a => a.animal)
-            .FirstOrDefaultAsync(a => a.adopcionId == id);
-        return adopcion;
+        var res  = await GetQuery()
+            .Where(q => q.animal.organizacion.organizacionUsuarios.Any(a => a.usuarioId == usuarioId))
+            .OrderByDescending(q => q.fechaActualizacion)
+            .ToListAsync();
+        return res.Select(r => ToResponse(r)).ToList();
     }
 
-    public async Task<Adopcion?> Solicitar(AdopcionSolicitarRequest request)
+    public async Task<object?> GetById(int id)
+    {
+        var adopcion = await GetQuery()
+            .Where(q => q.adopcionId == id)
+            .FirstOrDefaultAsync();
+        if (adopcion == null)
+        {
+            return null;
+        }
+        return ToResponse(adopcion);
+    }
+    
+    public async Task<object?> GetByIdAndUser(int id, int userId)
+    {
+        var adopcion = await GetQuery()
+            .Where(q => q.adopcionId == id && q.usuarioId == userId)
+            .FirstOrDefaultAsync();
+        if (adopcion == null)
+        {
+            return null;
+        }
+        return ToResponse(adopcion);
+    }
+    public async Task<object?> GetByIdAndAdminColaborador(int id, int userId)
+    {
+        var adopcion = await GetQuery()
+            .Where(q => q.adopcionId == id && q.animal.organizacion.organizacionUsuarios.Any(a => a.usuarioId == userId))
+            .FirstOrDefaultAsync();
+        if (adopcion == null)
+        {
+            return null;
+        }
+        return ToResponse(adopcion);
+    }
+    
+    
+    public async Task<object?> Solicitar(AdopcionSolicitarRequest request)
     {
         var user = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(a => a.usuarioId == request.usuarioId);
         
@@ -104,7 +134,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
 
     }
 
-    public async Task<Adopcion?> Aprobar(int id)
+    public async Task<object?> Aprobar(int id)
     {
         var adopcion = await db.Adopcion
             .Include(a => a.animal)
@@ -163,7 +193,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         
     }
 
-    public async Task<Adopcion?> Rechazar(int id)
+    public async Task<object?> Rechazar(int id)
     {
         var adopcion = await db.Adopcion
             .Include(a => a.animal)
@@ -228,5 +258,70 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         return await db.AdopcionEstado.AsNoTracking().ToListAsync();
     }
 
+
+    private IQueryable<Adopcion> GetQuery()
+    {
+        return db.Adopcion
+                .AsNoTracking()
+                .Include(a => a.adopcionEstado)
+                .Include(a => a.usuario)
+                .ThenInclude(u => u.comuna)
+                .Include(a => a.animal)
+                .ThenInclude(a => a.organizacion)
+                .ThenInclude(o => o.comuna)
+                .Include(a => a.animal)
+                .ThenInclude(a => a.animalImagenes)
+                .Include(a => a.animal)
+                .ThenInclude(a => a.organizacion)
+                .ThenInclude(o => o.organizacionUsuarios)
+            ;
+    }
+
     
+    private object ToResponse(Adopcion adopcion)
+    {
+        return new
+        {
+            adopcionId = adopcion.adopcionId,
+            fechaCreacion = adopcion.fechaCreacion,
+            fechaActualizacion = adopcion.fechaActualizacion,
+            descripcionFamilia = adopcion.descripcionFamilia,
+            adopcionEstado = adopcion.adopcionEstado,
+            usuario = new
+            {
+                usuarioId = adopcion.usuario.usuarioId,
+                username = adopcion.usuario.username,
+                nombres = adopcion.usuario.nombres,
+                apellidos = adopcion.usuario.apellidos,
+                direccion = adopcion.usuario.direccion,
+                telefono = adopcion.usuario.telefono,
+                telefono2 = adopcion.usuario.telefono2,
+                comuna = adopcion.usuario.comuna,
+            },
+            animal = new
+            {
+                animalId = adopcion.animal.animalId,
+                nombre = adopcion.animal.nombre,
+                peso = adopcion.animal.peso,
+                fechaNacimiento = adopcion.animal.fechaNacimiento,
+                descripcion = adopcion.animal.descripcion,
+                especie = adopcion.animal.especie,
+                sexo = adopcion.animal.sexo,
+                tamano = adopcion.animal.tamano,
+                nivelActividad = adopcion.animal.nivelActividad,
+                edad = adopcion.animal.edad,
+                animalImagenes = adopcion.animal.animalImagenes,
+                organizacion = new
+                {
+                    organizacionId = adopcion.animal.organizacion.organizacionId,
+                    nombre = adopcion.animal.organizacion.nombre,
+                    nombreContacto = adopcion.animal.organizacion.nombreContacto,
+                    telefonoContacto = adopcion.animal.organizacion.telefonoContacto,
+                    emailContacto = adopcion.animal.organizacion.emailContacto,
+                    direccion = adopcion.animal.organizacion.direccion,
+                    comuna = adopcion.animal.organizacion.comuna,
+                }
+            }
+        };
+    }
 }

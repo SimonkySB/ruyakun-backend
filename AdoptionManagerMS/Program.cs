@@ -40,7 +40,9 @@ builder.Services.AddAppCors();
 builder.Services.AddScoped<AdopcionService>();
 builder.Services.AddScoped<SeguimientoService>();
 builder.Services.AddScoped<EventGridService>();
+builder.Services.AddScoped<UsuarioService>();
 
+builder.Services.AddSecurityExtensions();
 
 var app = builder.Build();
 

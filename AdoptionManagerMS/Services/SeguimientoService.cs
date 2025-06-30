@@ -13,14 +13,7 @@ public class SeguimientoService(AppDbContext db)
     
     public async Task<List<SeguimientoResponse>> List(SeguimientoQuery query)
     {
-        IQueryable<Seguimiento> seguimientos = db.Seguimiento.AsNoTracking()
-            .Include(s => s.seguimientoEstado)
-            .Include(s => s.seguimientoTipo)
-            .Include(s => s.adopcion)
-            .ThenInclude(s => s.usuario)
-            .Include(s => s.adopcion)
-            .ThenInclude(a => a.animal)
-            .Include(s => s.adopcion);
+        IQueryable<Seguimiento> seguimientos = GetQuery();
 
         if (query.usuarioId.HasValue)
         {
@@ -31,33 +24,55 @@ public class SeguimientoService(AppDbContext db)
         {
             seguimientos = seguimientos.Where(u => query.adopcionId == u.adopcion.adopcionId);
         }
-            
-        return await seguimientos.Select(s => new SeguimientoResponse
-            {
-                seguimientoId = s.seguimientoId,
-                seguimientoTipoId = s.seguimientoTipoId,
-                fechaInteraccion = s.fechaEntrevista,
-                fechaCreacion = s.fechaCreacion,
-                descripcion = s.descripcion,
-                seguimientoEstadoId = s.seguimientoEstadoId,
-                observacion = s.observacion,
-                fechaActualizacion = s.fechaActualizacion,
-                fechaCierre = s.fechaCierre,
-                adopcionId = s.adopcionId,
-                animalId = s.adopcion.animalId,
-                usuarioId = s.adopcion.usuarioId,
-                usuarioNombre = s.adopcion.usuario.nombres,
-                animalNombre = s.adopcion.animal.nombre,
-                seguimientoTipoNombre = s.seguimientoTipo.nombre,
-                seguimientoEstadoNombre = s.seguimientoEstado.nombre,
-            })
-            .ToListAsync();
+
+        var data = await seguimientos.ToListAsync();
+        return data.Select(s => ToResponse(s)).ToList();
     }
 
-    public async Task<SeguimientoResponse?> GetById(int id, int? usuarioId = null)
+    public async Task<List<SeguimientoResponse>> ListByAdminColaborador(int usuarioId)
     {
-        var res = await _GetById(id, usuarioId);
-        return res;
+        var data = await GetQuery()
+            .Where(s => s.adopcion.animal.organizacion.organizacionUsuarios.Any(o => o.usuarioId == usuarioId))
+            .ToListAsync();
+        return data.Select(s => ToResponse(s)).ToList();
+        
+    }
+
+    public async Task<SeguimientoResponse?> GetById(int id)
+    {
+        var res = await GetQuery()
+            .Where(s => s.seguimientoId == id)
+            .FirstOrDefaultAsync();
+        if (res == null)
+        {
+            return null;
+        }
+        return ToResponse(res);
+    }
+    
+    public async Task<SeguimientoResponse?> GetByIdAndUser(int id, int usuarioId)
+    {
+        var res = await GetQuery()
+            .Where(s => s.seguimientoId == id && s.adopcion.usuarioId == usuarioId)
+            .FirstOrDefaultAsync();
+        if (res == null)
+        {
+            return null;
+        }
+        return ToResponse(res);
+    }
+    
+    
+    public async Task<SeguimientoResponse?> GetByIdAndAdminColaborador(int id, int usuarioId)
+    {
+        var res = await GetQuery()
+            .Where(s => s.seguimientoId == id && s.adopcion.animal.organizacion.organizacionUsuarios.Any(o => o.usuarioId == usuarioId))
+            .FirstOrDefaultAsync();
+        if (res == null)
+        {
+            return null;
+        }
+        return ToResponse(res);
     }
 
     public async Task<SeguimientoResponse?> Crear(SeguimientoRequest request)
@@ -158,40 +173,39 @@ public class SeguimientoService(AppDbContext db)
         return await db.SeguimientoTipo.AsNoTracking().ToListAsync();
     }
 
-
-    private async Task<SeguimientoResponse?> _GetById(int id, int? usuarioId = null)
+    
+    private IQueryable<Seguimiento> GetQuery()
     {
-        var seguimiento = await db.Seguimiento.AsNoTracking()
+        return db.Seguimiento.AsNoTracking()
             .Include(s => s.seguimientoEstado)
             .Include(s => s.seguimientoTipo)
             .Include(s => s.adopcion)
             .ThenInclude(s => s.usuario)
             .Include(s => s.adopcion)
             .ThenInclude(a => a.animal)
-            .Include(s => s.adopcion)
-            .Where(s => s.seguimientoId == id)
-            .Select(s => new SeguimientoResponse
-            {
-                seguimientoId = s.seguimientoId,
-                seguimientoTipoId = s.seguimientoTipoId,
-                fechaInteraccion = s.fechaEntrevista,
-                fechaCreacion = s.fechaCreacion,
-                descripcion = s.descripcion,
-                seguimientoEstadoId = s.seguimientoEstadoId,
-                observacion = s.observacion,
-                fechaActualizacion = s.fechaActualizacion,
-                fechaCierre = s.fechaCierre,
-                adopcionId = s.adopcionId,
-                animalId = s.adopcion.animalId,
-                usuarioId = s.adopcion.usuarioId,
-                usuarioNombre = s.adopcion.usuario.nombres,
-                animalNombre = s.adopcion.animal.nombre,
-                seguimientoTipoNombre = s.seguimientoTipo.nombre,
-                seguimientoEstadoNombre = s.seguimientoEstado.nombre,
-            })
-            .FirstOrDefaultAsync();
-        return seguimiento;
+            .ThenInclude(a => a.organizacion)
+            .ThenInclude(a => a.organizacionUsuarios)
+            .Include(s => s.adopcion);
     }
-    
-    
+
+    private SeguimientoResponse? ToResponse(Seguimiento s)
+    {
+        return new SeguimientoResponse
+        {
+            seguimientoId = s.seguimientoId,
+            fechaInteraccion = s.fechaEntrevista,
+            fechaCreacion = s.fechaCreacion,
+            descripcion = s.descripcion,
+            observacion = s.observacion,
+            fechaActualizacion = s.fechaActualizacion,
+            fechaCierre = s.fechaCierre,
+            adopcionId = s.adopcionId,
+            animalId = s.adopcion.animalId,
+            usuarioId = s.adopcion.usuarioId,
+            usuarioNombre = s.adopcion.usuario.nombres,
+            animalNombre = s.adopcion.animal.nombre,
+            seguimientoTipo = s.seguimientoTipo,
+            seguimientoEstado = s.seguimientoEstado,
+        };
+    }
 }

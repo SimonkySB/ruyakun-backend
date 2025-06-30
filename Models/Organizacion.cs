@@ -10,8 +10,6 @@ public class Organizacion
     public string direccion { get; set; }
     public int comunaId { get; set; }
     public DateTime? fechaEliminacion { get; set; }
-    
     public Comuna comuna { get; set; }
-
     public List<OrganizacionUsuario> organizacionUsuarios { get; set; } = [];
 }

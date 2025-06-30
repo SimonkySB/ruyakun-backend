@@ -52,10 +52,6 @@ public static class SecurityExtensions
             {
                 P.RequireClaim("extension_Roles", Policies.Admin, Policies.Colaborator);
             });
-            opt.AddPolicy(Policies.AnyRole, P =>
-            {
-                P.RequireClaim("extension_Roles", Policies.Admin, Policies.Colaborator, Policies.User);
-            });
             opt.AddPolicy(Policies.SuperAdminOrAdmin, P =>
             {
                 P.RequireClaim("extension_Roles", Policies.Admin, Policies.SuperAdmin);
@@ -112,7 +108,6 @@ public static class Policies
     
     public const string AdminOrColaborator = "ADMIN_OR_COLABORATOR";
     public const string SuperAdminOrAdmin = "SUPER_ADMIN_OR_ADMIN";
-    public const string AnyRole = "ANY_ROLE";
 }
 
 

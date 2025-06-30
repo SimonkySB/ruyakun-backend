@@ -15,13 +15,11 @@ public class Animal
     public DateTime? fechaEliminacion { get; set; }
     public int tamanoId { get; set; }
     public int nivelActividadId { get; set; }
-    
     public Especie especie { get; set; }
     public Sexo sexo { get; set; }
     public Organizacion organizacion { get; set; }
     public Tamano tamano { get; set; }
     public NivelActividad nivelActividad { get; set; }
-
     public List<AnimalImagen> animalImagenes { get; set; } = [];
     
     public int edad
