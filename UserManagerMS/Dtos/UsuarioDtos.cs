@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Models;
 
 namespace UserManagerMS.Dtos;
 
@@ -24,23 +25,17 @@ public class UsuarioResponse
 {
     public required int usuarioId { get; set; }
     public required string username { get; set; }
-    public required string nombres { get; set; }
-    public required string apellidos { get; set; }
+    public required string? nombres { get; set; }
+    public required string? apellidos { get; set; }
     public required bool activo { get; set; }
     public required DateTime fechaCreacion { get; set; }
-    public required string direccion { get; set; }
-    public required string telefono { get; set; }
+    public required string? direccion { get; set; }
+    public required string? telefono { get; set; }
     public required string? telefono2 { get; set; }
-    public required UsuarioComunaResponse comuna { get; set; }
+    public required Comuna? comuna { get; set; }
+    public required string rol  {get; set;}
     
 }
-
-public class UsuarioComunaResponse
-{
-    public required int comunaId { get; set; }
-    public required string nombre { get; set; }
-}
-
 
 
 public class UsuarioProfileRequest
