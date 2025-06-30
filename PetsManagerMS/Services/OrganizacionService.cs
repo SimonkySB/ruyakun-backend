@@ -8,54 +8,36 @@ namespace PetsManagerMS.Services;
 
 public class OrganizacionService(AppDbContext db)
 {
-    public async Task<List<OrganizacionResponse>> List()
+    public async Task<List<OrganizacionResponse>> List(int? usuarioId)
     {
-        var res = await db.Organizacion.AsNoTracking()
+        var query = db.Organizacion
+            .AsNoTracking()
             .Include(o => o.comuna)
-            .Select(o => new OrganizacionResponse
-            {
-                organizacionId = o.organizacionId,
-                nombre = o.nombre,
-                nombreContacto = o.nombreContacto,
-                telefonoContacto = o.telefonoContacto,
-                emailContacto = o.emailContacto,
-                direccion = o.direccion,
-                fechaEliminacion = o.fechaEliminacion,
-                comuna = new OrganizacionComunaResponse()
-                {
-                    comunaId = o.comunaId,
-                    nombre = o.comuna.nombre,
-                },
-                usuariosId = o.organizacionUsuarios.Select(u => u.usuarioId).ToList(),
-            })
-            .Where(a => a.fechaEliminacion == null).ToListAsync();
-        return res;
+            .Include(o => o.organizacionUsuarios)
+            .Where(o => o.fechaEliminacion == null);
+
+        if (usuarioId.HasValue)
+        {
+            query = query.Where(a => a.organizacionUsuarios.Any(org => org.usuarioId == usuarioId.Value));
+        }
+
+        var res = await query.ToListAsync();
+        return res.Select(r => ToResponse(r)).ToList();
     }
+    
     
     public async Task<OrganizacionResponse?> GetById(int id)
     {
         var res = await db.Organizacion.AsNoTracking()
             .Include(o => o.comuna)
             .Include(o => o.organizacionUsuarios)
-            .Where(a => a.fechaEliminacion == null && a.organizacionId == id)
-            .Select(o => new OrganizacionResponse
-            {
-                organizacionId = o.organizacionId,
-                nombre = o.nombre,
-                nombreContacto = o.nombreContacto,
-                telefonoContacto = o.telefonoContacto,
-                emailContacto = o.emailContacto,
-                direccion = o.direccion,
-                fechaEliminacion = o.fechaEliminacion,
-                comuna = new OrganizacionComunaResponse()
-                {
-                    comunaId = o.comunaId,
-                    nombre = o.comuna.nombre,
-                },
-                usuariosId = o.organizacionUsuarios.Select(u => u.usuarioId).ToList(),
-            })
-            .FirstOrDefaultAsync();
-        return res;
+            .Where(a => a.fechaEliminacion == null && a.organizacionId == id).FirstOrDefaultAsync();
+
+        if (res == null)
+        {
+            return null;
+        }
+        return ToResponse(res);
     }
     
     public async Task<OrganizacionResponse?> Crear(OrganizacionRequest request)
@@ -184,5 +166,22 @@ public class OrganizacionService(AppDbContext db)
             throw new AppException("Organizacion no existe");
         }
         return res;
+    }
+
+
+    private OrganizacionResponse ToResponse(Organizacion o)
+    {
+        return new OrganizacionResponse
+        {
+            organizacionId = o.organizacionId,
+            nombre = o.nombre,
+            nombreContacto = o.nombreContacto,
+            telefonoContacto = o.telefonoContacto,
+            emailContacto = o.emailContacto,
+            direccion = o.direccion,
+            fechaEliminacion = o.fechaEliminacion,
+            comuna = o.comuna,
+            usuariosId = o.organizacionUsuarios.Select(u => u.usuarioId).ToList(),
+        };
     }
 }

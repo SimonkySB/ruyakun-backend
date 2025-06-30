@@ -38,12 +38,15 @@ builder.Services.AddAppCors();
 
 builder.Services.AddScoped<OrganizacionService>();
 builder.Services.AddScoped<AnimalService>();
+builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddSingleton(new Cloudinary(new Account(
     builder.Configuration["CloudinaryCloudName"],
     builder.Configuration["CloudinaryApiKey"],
     builder.Configuration["CloudinarySecretKey"]
     )));
 
+
+builder.Services.AddSecurityExtensions();
 
 var app = builder.Build();
 

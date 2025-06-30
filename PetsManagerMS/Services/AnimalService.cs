@@ -12,10 +12,11 @@ namespace PetsManagerMS.Services;
 public class AnimalService(AppDbContext db, Cloudinary cloudinary)
 {
 
-    public async Task<PageResult<Animal>> List(AnimalQuery filter)
+    public async Task<PageResult<AnimalResponse>> List(AnimalQuery filter)
     {
         var query = db.Animal.AsNoTracking()
             .Include(a => a.organizacion)
+                .ThenInclude(o => o.comuna)
             .Include(a => a.especie)
             .Include(a => a.sexo)
             .Include(a => a.nivelActividad)
@@ -92,18 +93,20 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
             .Take(filter.pageSize).ToListAsync();
         
         
-        return new PageResult<Animal>
+        return new PageResult<AnimalResponse>
         {
-            items = animales,
+            items = animales.Select(a => ToAnimalResponse(a)).ToList(),
             totalCount = totalCount,
             page = filter.page,
             pageSize = filter.pageSize
         };
     }
     
-    public async Task<Animal?> GetById(int id)
+    public async Task<AnimalResponse?> GetById(int id)
     {
         var res = await db.Animal.AsNoTracking()
+            .Include(a => a.organizacion)
+            .ThenInclude(o => o.comuna)
             .Include(a => a.especie)
             .Include(a => a.sexo)
             .Include(a => a.nivelActividad)
@@ -111,10 +114,36 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
             .Include(a => a.animalImagenes)
             .Where(a => a.fechaEliminacion == null && a.animalId == id && a.organizacion.fechaEliminacion == null)
             .FirstOrDefaultAsync();
-        return res;
+        if (res == null)
+        {
+            return null;
+        }
+        return ToAnimalResponse(res);
     }
 
-    public async Task<Animal?> Crear(AnimalRequest request)
+    public async Task<List<AnimalResponse>> GetByUsuario(int usuarioId)
+    {
+        var res = await db.Animal.AsNoTracking()
+            .Include(a => a.organizacion)
+            .ThenInclude(o => o.comuna)
+            .Include(a => a.organizacion)
+            .ThenInclude(a => a.organizacionUsuarios)
+            .Include(a => a.especie)
+            .Include(a => a.sexo)
+            .Include(a => a.nivelActividad)
+            .Include(a => a.tamano)
+            .Include(a => a.animalImagenes)
+            .Where(a => 
+                a.fechaEliminacion == null 
+                && a.organizacion.fechaEliminacion == null
+                && a.organizacion.organizacionUsuarios.Any(o => o.organizacionId == usuarioId))
+            .ToListAsync();
+
+        return res.Select(r => ToAnimalResponse(r)).ToList();
+    }
+    
+
+    public async Task<AnimalResponse?> Crear(AnimalRequest request)
     {
 
         await VerifyRequest(request);
@@ -139,7 +168,7 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
         return await GetById(animal.animalId);
     }
     
-    public async Task<Animal?> Editar(int id, AnimalRequest request)
+    public async Task<AnimalResponse?> Editar(int id, AnimalRequest request)
     {
         await VerifyRequest(request);
         var animal = await GetByIdOrException(id);
@@ -311,8 +340,41 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
         }
         return res;
     }
-    
-    
-    
+
+
+    private  AnimalResponse ToAnimalResponse(Animal animal)
+    {
+        return new AnimalResponse()
+        {
+            animalId = animal.animalId,
+            nombre = animal.nombre,
+            peso = animal.peso,
+            fechaRegistro = animal.fechaRegistro,
+            fechaNacimiento = animal.fechaNacimiento,
+            publicado = animal.publicado,
+            descripcion = animal.descripcion,
+            especieId = animal.especieId,
+            sexoId = animal.sexoId,
+            organizacionId = animal.organizacionId,
+            fechaEliminacion = animal.fechaEliminacion,
+            tamanoId = animal.tamanoId,
+            nivelActividadId = animal.nivelActividadId,
+            especie = animal.especie,
+            sexo = animal.sexo,
+            organizacion = new AnimalOrganizacionResponse()
+            {
+                organizacionId = animal.organizacion.organizacionId,
+                nombre = animal.organizacion.nombre,
+                nombreContacto = animal.organizacion.nombreContacto,
+                telefonoContacto = animal.organizacion.telefonoContacto,
+                emailContacto = animal.organizacion.emailContacto,
+                direccion = animal.organizacion.direccion,
+                comuna = animal.organizacion.comuna,
+            },
+            tamano = animal.tamano,
+            nivelActividad = animal.nivelActividad,
+            animalImagenes = animal.animalImagenes
+        };
+    } 
     
 }

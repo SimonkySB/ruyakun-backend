@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetsManagerMS.Dtos;
 using PetsManagerMS.Services;
+using Shared;
 
 namespace PetsManagerMS.Controllers;
 
 [ApiController]
 [Route("animales")]
-public class AnimalController(AnimalService animalService) : ControllerBase
+public class AnimalController(AnimalService animalService, UsuarioService usuarioService) : ControllerBase
 {
 
 
@@ -29,22 +31,35 @@ public class AnimalController(AnimalService animalService) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(policy: Policies.AdminOrColaborator)]
     public async Task<IActionResult> Crear(AnimalRequest request)
     {
+
+        await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), request.organizacionId);
+        
         var res = await animalService.Crear(request);
         return Ok(res);
     }
     
     [HttpPut("{id}")]
+    [Authorize(policy: Policies.AdminOrColaborator)]
     public async Task<IActionResult> Editar(int id, AnimalRequest request)
     {
+        await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), request.organizacionId);
         var res = await animalService.Editar(id, request);
         return Ok(res);
     }
     
     [HttpDelete("{id}")]
+    [Authorize(policy: Policies.AdminOrColaborator)]
     public async Task<IActionResult> Eliminar(int id)
     {
+        var res = await animalService.GetById(id);
+        if (res == null)
+        {
+            return NotFound("Animal no encontrado");
+        }
+        await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
         await animalService.Eliminar(id);
         return NoContent();
     }
@@ -79,18 +94,41 @@ public class AnimalController(AnimalService animalService) : ControllerBase
     }
 
     [HttpPost("{animalId}/imagenes")]
+    [Authorize(policy: Policies.AdminOrColaborator)]
     public async Task<IActionResult> AgregarImagen(int animalId, [FromForm] IFormFile file)
     {
+        var res = await animalService.GetById(animalId);
+        if (res == null)
+        {
+            return NotFound("Animal no encontrado");
+        }
+        await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
+        
         await animalService.AgregarImagen(animalId, file);
         return NoContent();
     }
 
     [HttpDelete("{animalId}/imagenes/{id}")]
+    [Authorize(policy: Policies.AdminOrColaborator)]
     public async Task<IActionResult> EliminarImagen(int animalId, int id)
     {
+        var res = await animalService.GetById(animalId);
+        if (res == null)
+        {
+            return NotFound("Animal no encontrado");
+        }
+        await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
         await animalService.EliminarImagen(animalId, id);
         return NoContent();
     }
-    
+
+    [HttpGet("me")]
+    [Authorize(policy: Policies.AdminOrColaborator)]
+    public async Task<IActionResult> ListAnimalesUsuario()
+    {
+        var usuario = await usuarioService.VerificaUsuario(User.GetUsername());
+        var animales = await animalService.GetByUsuario(usuario.usuarioId);
+        return Ok(animales);
+    }
     
 }
