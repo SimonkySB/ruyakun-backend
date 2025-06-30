@@ -149,8 +149,11 @@ public class AnimalService(AppDbContext db, Cloudinary cloudinary)
             var adopciones = await db.Adopcion.AsNoTracking()
                 .Where(a => a.animalId == id && a.adopcionEstadoId == (int)AdopcionEstadoEnum.Aprobada)
                 .ToListAsync();
-            
-            throw new AppException("No es posible publicar el animal, ya se encuentra adoptado.");
+
+            if (adopciones.Count > 0)
+            {
+                throw new AppException("No es posible publicar el animal, ya se encuentra adoptado.");
+            }
 
         }
 
