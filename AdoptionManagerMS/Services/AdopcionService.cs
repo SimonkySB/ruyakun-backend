@@ -136,61 +136,125 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
 
     public async Task<object?> Aprobar(int id)
     {
-        var adopcion = await db.Adopcion
+        await using var transaction = await db.Database.BeginTransactionAsync();
+        try
+        {
+            var adopcion = await db.Adopcion
             .Include(a => a.animal)
             .Include(a => a.usuario)
             .FirstOrDefaultAsync(a => a.adopcionId == id);
         
-        if (adopcion == null)
-        {
-            throw new AppException("Adopcion no encontrada");
-        }
-
-        if (adopcion.adopcionEstadoId != (int)AdopcionEstadoEnum.Pendiente)
-        {
-            throw new AppException("No se posible aprobar esta solicitud. La solicitud no se encuentra en estado pendiente.");
-        }
-
-        
-        if (adopcion.animal.fechaEliminacion != null)
-        {
-            throw new AppException("El animal se encuentra eliminado");
-        }
-        
-        var adopciones = await db.Adopcion
-            .AsNoTracking()
-            .Where(a => a.animalId == adopcion.animalId && a.adopcionId != id && adopcion.adopcionEstadoId == (int)AdopcionEstadoEnum.Aprobada)
-            .ToListAsync();
-        
-        if (adopciones.Count > 0)
-        {
-            throw new AppException("El animal ya se encuentra adoptado");
-        }
-        
-        
-        adopcion.adopcionEstadoId = (int)AdopcionEstadoEnum.Aprobada;
-        adopcion.fechaActualizacion = DateTime.UtcNow;
-        
-        adopcion.animal.publicado = false;
-        
-        await db.SaveChangesAsync();
-        
-        await eventGridService.PublishEventAsync(
-            "Adopcion.Solicitada",
-            new
+            if (adopcion == null)
             {
-                emailAdoptante = adopcion.usuario.username,
-                contenido = $"""
-                                 <h2>Felicidades {adopcion.usuario.nombres}. Tu solicitud de adopción para {adopcion.animal.nombre} a sido Aprobada!</h2>
-                             """,
-                asunto = "Solicitud de adopcion aprobada!",
-                
-            },
-            $"adopciones/${adopcion.adopcionId}"
-        );
+                throw new AppException("Adopcion no encontrada");
+            }
+
+            if (adopcion.adopcionEstadoId != (int)AdopcionEstadoEnum.Pendiente)
+            {
+                throw new AppException("No se posible aprobar esta solicitud. La solicitud no se encuentra en estado pendiente.");
+            }
+
+            
+            if (adopcion.animal.fechaEliminacion != null)
+            {
+                throw new AppException("El animal se encuentra eliminado");
+            }
+            
+            var adopciones = await db.Adopcion
+                .AsNoTracking()
+                .Where(a => a.animalId == adopcion.animalId && a.adopcionId != id && adopcion.adopcionEstadoId == (int)AdopcionEstadoEnum.Aprobada)
+                .ToListAsync();
+            
+            if (adopciones.Count > 0)
+            {
+                throw new AppException("El animal ya se encuentra adoptado");
+            }
+            
+            
+            adopcion.adopcionEstadoId = (int)AdopcionEstadoEnum.Aprobada;
+            adopcion.fechaActualizacion = DateTime.UtcNow;
+            
+            adopcion.animal.publicado = false;
+            
+            await db.SaveChangesAsync();
+            
+           
+
+            var seguimientoTipo = await db.SeguimientoTipo.AsNoTracking()
+                .FirstOrDefaultAsync(s => s.seguimientoTipoId == (int)SeguimientoTipoEnum.VisitaDomiciliaria);
+            
+            var hoy = DateTime.UtcNow.Date;
+            
+            var fechaTentativa = hoy.AddDays(7).AddHours(17);
+
+            if (fechaTentativa.DayOfWeek == DayOfWeek.Saturday)
+            {
+                fechaTentativa = fechaTentativa.AddDays(2);
+            }
+            else if (fechaTentativa.DayOfWeek == DayOfWeek.Sunday)
+            {
+                fechaTentativa = fechaTentativa.AddDays(1);
+            }
+
+            var seguimiento = new Seguimiento()
+            {
+                adopcionId = adopcion.adopcionId,
+                seguimientoTipoId = (int)SeguimientoTipoEnum.VisitaDomiciliaria,
+                seguimientoEstadoId = (int)SeguimientoEstadoEnum.Activo,
+                fechaEntrevista = fechaTentativa,
+                fechaCreacion = DateTime.UtcNow,
+                fechaActualizacion = DateTime.UtcNow,
+                descripcion = "Seguimiento Inicial",
+            };
+            await db.Seguimiento.AddAsync(seguimiento);
+            
+            
+            await eventGridService.PublishEventAsync(
+                "Adopcion.Solicitada",
+                new
+                {
+                    emailAdoptante = adopcion.usuario.username,
+                    contenido = $"""
+                                     <h2>Felicidades {adopcion.usuario.nombres}. Tu solicitud de adopción para {adopcion.animal.nombre} a sido Aprobada!</h2>
+                                     <h4>En breve recibiras información de tu próximo seguimiento.</h4>
+                                     <p>Si tienes dudas, puedes contactarnos a adopciones@rukayun.cl</p>
+                                 """,
+                    asunto = "Solicitud de adopcion aprobada!",
+                    
+                },
+                $"adopciones/${adopcion.adopcionId}"
+            );
+
+
+            string? fechaEntrevista = seguimiento.fechaEntrevista?.ToString("dd-MM-yyyy HH:mm");
+            await eventGridService.PublishEventAsync(
+                "Adopcion.Solicitada",
+                new
+                {
+                    emailAdoptante = adopcion.usuario.username,
+                    contenido = $"""
+                                     <h2>Se ha programado un evento de tipo: {seguimientoTipo?.nombre} para {adopcion.animal.nombre}</h2>
+                                     <p>Detalles del evento</p>
+                                     <ul>
+                                        <li>Fecha de Interacción: {fechaEntrevista}</li>
+                                        <li>Descripción: {seguimiento.descripcion}</li>
+                                     </ul>
+                                     <p>Si tienes dudas, puedes contactarnos a adopciones@rukayun.cl</p>
+                                 """,
+                    asunto = "Seguimiento de Tu Animal de Compañia!",
+                    
+                },
+                $"adopciones/${adopcion.adopcionId}"
+            );
         
-        return await GetById(adopcion.adopcionId);
-        
+            await transaction.CommitAsync();
+            return await GetById(adopcion.adopcionId);
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task<object?> Rechazar(int id)
