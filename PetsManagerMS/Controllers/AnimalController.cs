@@ -31,10 +31,16 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
     }
 
     [HttpPost]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> Crear(AnimalRequest request)
     {
 
+        if (User.ISSuperAdmin())
+        {
+            var resAdmin = await animalService.Crear(request);
+            return Ok(resAdmin);
+        }
+        
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), request.organizacionId);
         
         var res = await animalService.Crear(request);
@@ -42,16 +48,21 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
     }
     
     [HttpPut("{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> Editar(int id, AnimalRequest request)
     {
+        if (User.ISSuperAdmin())
+        {
+            var resAdmin = await animalService.Editar(id, request);
+            return Ok(resAdmin);
+        }
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), request.organizacionId);
         var res = await animalService.Editar(id, request);
         return Ok(res);
     }
     
     [HttpDelete("{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> Eliminar(int id)
     {
         var res = await animalService.GetById(id);
@@ -59,6 +70,13 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
         {
             return NotFound("Animal no encontrado");
         }
+
+        if (User.ISSuperAdmin())
+        {
+            await animalService.Eliminar(id);
+            return NoContent();
+        }
+        
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
         await animalService.Eliminar(id);
         return NoContent();
@@ -94,13 +112,19 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
     }
 
     [HttpPost("{animalId}/imagenes")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> AgregarImagen(int animalId, [FromForm] IFormFile file)
     {
         var res = await animalService.GetById(animalId);
         if (res == null)
         {
             return NotFound("Animal no encontrado");
+        }
+
+        if (User.ISSuperAdmin())
+        {
+            await animalService.AgregarImagen(animalId, file);
+            return NoContent();
         }
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
         
@@ -109,7 +133,7 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
     }
 
     [HttpDelete("{animalId}/imagenes/{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> EliminarImagen(int animalId, int id)
     {
         var res = await animalService.GetById(animalId);
@@ -117,13 +141,19 @@ public class AnimalController(AnimalService animalService, UsuarioService usuari
         {
             return NotFound("Animal no encontrado");
         }
+
+        if (User.ISSuperAdmin())
+        {
+            await animalService.EliminarImagen(animalId, id);
+            return NoContent();
+        }
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), res.organizacionId);
         await animalService.EliminarImagen(animalId, id);
         return NoContent();
     }
 
     [HttpGet("me")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> ListAnimalesUsuario()
     {
         var usuario = await usuarioService.VerificaUsuario(User.GetUsername());

@@ -75,7 +75,7 @@ public class OrganizacionController(OrganizacionService organizacionService, Usu
     
     
     [HttpGet("me")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> ListOrganizacionesOwner()
     {
         var user = await usuarioService.VerificaUsuario(User.GetUsername());
@@ -85,7 +85,7 @@ public class OrganizacionController(OrganizacionService organizacionService, Usu
     
     
     [HttpPut("{id}/me")]
-    [Authorize(policy: Policies.Admin)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<IActionResult> EditarOrganizacionOwner(int id, OrganizacionRequest request)
     {
         await usuarioService.VerificaUsuarioOrganizacion(User.GetUsername(), id);

@@ -77,21 +77,27 @@ public class SeguimientoController(SeguimientoService seguimientoService, Usuari
     }
 
     [HttpPost]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> CrearSeguimiento(SeguimientoRequest request)
     {
         var usuario = await usuarioService.VerificaUsuario(User.GetUsername());
-        await usuarioService.VerificaAdopcionUsuario(request.adopcionId, usuario.usuarioId);
+        if (!User.ISSuperAdmin())
+        {
+            await usuarioService.VerificaAdopcionUsuario(request.adopcionId, usuario.usuarioId);
+        }
         
         var res = await seguimientoService.Crear(request);
         return Ok(res);
     }
 
     [HttpPut("{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> EditarSeguimiento(int id, SeguimientoRequest request)
     {
-        await VerificaSeguimiento(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaSeguimiento(id);
+        }
         
         var res = await seguimientoService.Editar(id, request);
         return Ok(res);
@@ -100,20 +106,26 @@ public class SeguimientoController(SeguimientoService seguimientoService, Usuari
    
 
     [HttpDelete("{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> EliminarSeguimiento(int id)
     {
-        await VerificaSeguimiento(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaSeguimiento(id);
+        }
         
         await seguimientoService.Eliminar(id);
         return NoContent();
     }
     
     [HttpPost("{id}/cerrar")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> CerrarSeguimiento(int id, SeguimientoCerrarRequest request)
     {
-        await VerificaSeguimiento(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaSeguimiento(id);
+        }
         
         var res = await seguimientoService.Cerrar(id, request);
         return Ok(res);

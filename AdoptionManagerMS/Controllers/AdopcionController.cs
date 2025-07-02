@@ -80,7 +80,6 @@ public class AdopcionController(AdopcionService adopcionService, UsuarioService 
     }
 
     [HttpPost("solicitar")]
-    [Authorize(policy: Policies.User)]
     public async Task<ActionResult> Solicitar(AdopcionSolicitarRequest request)
     {
         var usuario = await usuarioService.VerificaUsuario(User.GetUsername());
@@ -91,30 +90,38 @@ public class AdopcionController(AdopcionService adopcionService, UsuarioService 
     }
 
     [HttpPost("{id}/aprobar")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> Aprobar(int id)
     {
-        await VerificaAdopcion(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaAdopcion(id);
+        }
         
         var res = await adopcionService.Aprobar(id);
         return Ok(res);
     }
   
     [HttpPost("{id}/rechazar")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> Rechazar(int id)
     {
-
-        await VerificaAdopcion(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaAdopcion(id);
+        }
         var res = await adopcionService.Rechazar(id);
         return Ok(res);
     }
 
     [HttpDelete("{id}")]
-    [Authorize(policy: Policies.AdminOrColaborator)]
+    [Authorize(policy: Policies.SuperAdminOrAdminOrColaborador)]
     public async Task<ActionResult> Delete(int id)
     {
-        await VerificaAdopcion(id);
+        if (!User.ISSuperAdmin())
+        {
+            await VerificaAdopcion(id);
+        }
         
         await adopcionService.Eliminar(id);
         return NoContent();
