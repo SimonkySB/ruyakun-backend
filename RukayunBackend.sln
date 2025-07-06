@@ -12,6 +12,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureFuntions", "AzureFuntions\AzureFuntions.csproj", "{D0E66C92-5F95-430F-829D-8052A5B88738}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FC7F6568-57DF-4493-B0D2-B779B8C99A28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagerMSTest", "UserManagerMSTest\UserManagerMSTest.csproj", "{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,12 @@ Global
 		{D0E66C92-5F95-430F-829D-8052A5B88738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0E66C92-5F95-430F-829D-8052A5B88738}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0E66C92-5F95-430F-829D-8052A5B88738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD} = {FC7F6568-57DF-4493-B0D2-B779B8C99A28}
 	EndGlobalSection
 EndGlobal
