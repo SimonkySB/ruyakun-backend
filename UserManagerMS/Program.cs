@@ -38,7 +38,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddAppCors();
 
 
-builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 builder.Services.AddSecurityExtensions();
 

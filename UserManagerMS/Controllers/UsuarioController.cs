@@ -12,7 +12,7 @@ namespace UserManagerMS.Controllers;
 [ApiController]
 [Route("usuarios")]
 [Authorize]
-public class UsuarioController(UsuarioService usuarioService) : ControllerBase
+public class UsuarioController(IUsuarioService usuarioService) : ControllerBase
 {
 
    [HttpGet]

@@ -6,7 +6,7 @@ using UserManagerMS.Dtos;
 
 namespace UserManagerMS.Services;
 
-public class UsuarioService(AppDbContext db)
+public class UsuarioService(AppDbContext db) : IUsuarioService
 {
 
     public async Task<List<Usuario>> List(UsuarioQuery query)
