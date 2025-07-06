@@ -29,6 +29,7 @@ public class UsuarioService(AppDbContext db)
     public async Task<Usuario?> GetById(int id)
     {
         return await db.Usuario
+            .AsNoTracking()
             .Include(u => u.comuna)
             .FirstOrDefaultAsync(u => u.usuarioId == id);
     }
@@ -36,6 +37,7 @@ public class UsuarioService(AppDbContext db)
     public async Task<Usuario?> GetByEmail(string email)
     {
         var res = await db.Usuario
+            .AsNoTracking()
             .Include(u => u.comuna)
             .FirstOrDefaultAsync(u => u.username == email);
         return res;
@@ -79,12 +81,20 @@ public class UsuarioService(AppDbContext db)
             throw new AppException("Comuna no encontrada");
         }
 
-        var user = await db.Usuario.AsTracking().FirstOrDefaultAsync(u => u.usuarioId == usuario.usuarioId);
+        var user = await db.Usuario.FirstOrDefaultAsync(u => u.usuarioId == usuario.usuarioId);
 
         if (user == null)
         {
             throw new AppException("Usuario no encontrado");
         }
+        
+        user.nombres = usuario.nombres;
+        user.apellidos = usuario.apellidos;
+        user.direccion = usuario.direccion;
+        user.activo = usuario.activo;
+        user.telefono = usuario.telefono;
+        user.telefono2 = usuario.telefono2;
+        user.comunaId = usuario.comunaId;
         
         await db.SaveChangesAsync();
         return await GetById(user.usuarioId);
