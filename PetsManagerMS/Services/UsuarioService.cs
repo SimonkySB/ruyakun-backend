@@ -5,7 +5,7 @@ using Shared;
 
 namespace PetsManagerMS.Services;
 
-public class UsuarioService(AppDbContext db)
+public class UsuarioService(AppDbContext db) : IUsuarioService
 {
     public async Task<Usuario?> GetByEmail(string email)
     {

@@ -6,7 +6,7 @@ using Shared;
 
 namespace PetsManagerMS.Services;
 
-public class OrganizacionService(AppDbContext db)
+public class OrganizacionService(AppDbContext db) : IOrganizacionService
 {
     public async Task<List<OrganizacionResponse>> List(int? usuarioId)
     {

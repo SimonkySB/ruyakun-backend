@@ -36,10 +36,10 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddAppCors();
 
-builder.Services.AddScoped<OrganizacionService>();
-builder.Services.AddScoped<AnimalService>();
-builder.Services.AddScoped<UsuarioService>();
-builder.Services.AddSingleton(new Cloudinary(new Account(
+builder.Services.AddScoped<IOrganizacionService, OrganizacionService>();
+builder.Services.AddScoped<IAnimalService, AnimalService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddSingleton<ICloudinary>(new Cloudinary(new Account(
     builder.Configuration["CloudinaryCloudName"],
     builder.Configuration["CloudinaryApiKey"],
     builder.Configuration["CloudinarySecretKey"]

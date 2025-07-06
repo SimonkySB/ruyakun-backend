@@ -8,7 +8,7 @@ namespace PetsManagerMS.Controllers;
 
 [ApiController]
 [Route("animales")]
-public class AnimalController(AnimalService animalService, UsuarioService usuarioService) : ControllerBase
+public class AnimalController(IAnimalService animalService, IUsuarioService usuarioService) : ControllerBase
 {
 
 

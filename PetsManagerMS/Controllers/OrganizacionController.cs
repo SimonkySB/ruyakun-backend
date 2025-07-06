@@ -8,7 +8,7 @@ namespace PetsManagerMS.Controllers;
 
 [ApiController]
 [Route("organizaciones")]
-public class OrganizacionController(OrganizacionService organizacionService, UsuarioService usuarioService) : ControllerBase
+public class OrganizacionController(IOrganizacionService organizacionService, IUsuarioService usuarioService) : ControllerBase
 {
     
     [HttpGet]

@@ -9,7 +9,7 @@ using Shared;
 namespace PetsManagerMS.Services;
 
 
-public class AnimalService(AppDbContext db, Cloudinary cloudinary)
+public class AnimalService(AppDbContext db, ICloudinary cloudinary) : IAnimalService
 {
 
     public async Task<PageResult<AnimalResponse>> List(AnimalQuery filter)
