@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagerMSTest", "UserMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetsManagerMSTest", "PetsManagerMSTest\PetsManagerMSTest.csproj", "{B7117C82-AB38-4439-865F-D34FBF681811}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdoptionManagerMSTest", "AdoptionManagerMSTest\AdoptionManagerMSTest.csproj", "{BC8A8C53-998F-4C80-82E1-48B2F82174E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,9 +58,14 @@ Global
 		{B7117C82-AB38-4439-865F-D34FBF681811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7117C82-AB38-4439-865F-D34FBF681811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7117C82-AB38-4439-865F-D34FBF681811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC8A8C53-998F-4C80-82E1-48B2F82174E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC8A8C53-998F-4C80-82E1-48B2F82174E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC8A8C53-998F-4C80-82E1-48B2F82174E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC8A8C53-998F-4C80-82E1-48B2F82174E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD} = {FC7F6568-57DF-4493-B0D2-B779B8C99A28}
 		{B7117C82-AB38-4439-865F-D34FBF681811} = {FC7F6568-57DF-4493-B0D2-B779B8C99A28}
+		{BC8A8C53-998F-4C80-82E1-48B2F82174E5} = {FC7F6568-57DF-4493-B0D2-B779B8C99A28}
 	EndGlobalSection
 EndGlobal

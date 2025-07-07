@@ -45,5 +45,13 @@
     &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetByUsuario_UsuarioTieneAnimales_RetornaAnimales&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetByUsuario_UsuarioNoTieneAnimales_RetornaListaVacia&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.List_ShouldReturnOkResult_WithAnimals&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.GetById_ShouldReturnOkResult_WhenAnimalExists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.GetById_ShouldReturnNotFound_WhenAnimalDoesNotExist&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.Crear_ShouldReturnOkResult_WhenUserIsNotSuperAdminButBelongsToOrganization&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.Crear_ShouldReturnOkResult_WhenUserIsSuperAdmin&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::BC8A8C53-998F-4C80-82E1-48B2F82174E5::net9.0::AdoptionManagerMSTest.AdopcionServiceTests.List_ShouldReturnAllAdopciones_WhenNoFilterApplied&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::BC8A8C53-998F-4C80-82E1-48B2F82174E5::net9.0::AdoptionManagerMSTest.AdopcionServiceTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
