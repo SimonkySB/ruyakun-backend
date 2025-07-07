@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Models;
 
 namespace AdoptionManagerMS.Dtos;
 
@@ -15,4 +16,18 @@ public class AdopcionQuery
     public int? adopcionEstadoId { get; set; }
     public int? organizacionId { get; set; }
 }
+
+
+public class AdopcionResponse
+{
+    public int adopcionId { get; set; }
+    public DateTime fechaCreacion { get; set; }
+    public DateTime fechaActualizacion { get; set; }
+    public string descripcionFamilia  { get; set; }
+    public AdopcionEstado adopcionEstado { get; set; }
+    public UsuarioResponse usuario { get; set; }
+    public AnimalResponse animal { get; set; }
+}
+
+
 

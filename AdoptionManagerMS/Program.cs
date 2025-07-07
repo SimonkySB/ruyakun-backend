@@ -37,9 +37,9 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddAppCors();
 
 
-builder.Services.AddScoped<AdopcionService>();
+builder.Services.AddScoped<IAdopcionService, AdopcionService>();
 builder.Services.AddScoped<SeguimientoService>();
-builder.Services.AddScoped<EventGridService>();
+builder.Services.AddScoped<IEventGridService, EventGridService>();
 builder.Services.AddScoped<UsuarioService>();
 
 builder.Services.AddSecurityExtensions();

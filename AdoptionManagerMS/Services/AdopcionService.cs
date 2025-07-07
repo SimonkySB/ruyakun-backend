@@ -6,9 +6,9 @@ using Shared;
 
 namespace AdoptionManagerMS.Services;
 
-public class AdopcionService(AppDbContext db, EventGridService eventGridService)
+public class AdopcionService(AppDbContext db, IEventGridService eventGridService) : IAdopcionService
 {
-    public async Task<object> List(AdopcionQuery filter)
+    public async Task<List<AdopcionResponse>> List(AdopcionQuery filter)
     {
         IQueryable<Adopcion> query = GetQuery();
         
@@ -32,7 +32,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         return data.Select(r => ToResponse(r)).ToList();
     }
 
-    public async Task<List<object>> ListByAdminColaborador(int usuarioId)
+    public async Task<List<AdopcionResponse>> ListByAdminColaborador(int usuarioId)
     {
         var res  = await GetQuery()
             .Where(q => q.animal.organizacion.organizacionUsuarios.Any(a => a.usuarioId == usuarioId))
@@ -41,7 +41,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         return res.Select(r => ToResponse(r)).ToList();
     }
 
-    public async Task<object?> GetById(int id)
+    public async Task<AdopcionResponse?> GetById(int id)
     {
         var adopcion = await GetQuery()
             .Where(q => q.adopcionId == id)
@@ -53,7 +53,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         return ToResponse(adopcion);
     }
     
-    public async Task<object?> GetByIdAndUser(int id, int userId)
+    public async Task<AdopcionResponse?> GetByIdAndUser(int id, int userId)
     {
         var adopcion = await GetQuery()
             .Where(q => q.adopcionId == id && q.usuarioId == userId)
@@ -64,7 +64,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         }
         return ToResponse(adopcion);
     }
-    public async Task<object?> GetByIdAndAdminColaborador(int id, int userId)
+    public async Task<AdopcionResponse?> GetByIdAndAdminColaborador(int id, int userId)
     {
         var adopcion = await GetQuery()
             .Where(q => q.adopcionId == id && q.animal.organizacion.organizacionUsuarios.Any(a => a.usuarioId == userId))
@@ -77,7 +77,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
     }
     
     
-    public async Task<object?> Solicitar(AdopcionSolicitarRequest request)
+    public async Task<AdopcionResponse?> Solicitar(AdopcionSolicitarRequest request)
     {
         var user = await db.Usuario.AsNoTracking().FirstOrDefaultAsync(a => a.usuarioId == request.usuarioId);
         
@@ -134,7 +134,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
 
     }
 
-    public async Task<object?> Aprobar(int id)
+    public async Task<AdopcionResponse?> Aprobar(int id)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
         try
@@ -207,7 +207,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
                 descripcion = "Seguimiento Inicial",
             };
             await db.Seguimiento.AddAsync(seguimiento);
-            
+            await db.SaveChangesAsync();
             
             await eventGridService.PublishEventAsync(
                 "Adopcion.Solicitada",
@@ -257,7 +257,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
         }
     }
 
-    public async Task<object?> Rechazar(int id)
+    public async Task<AdopcionResponse?> Rechazar(int id)
     {
         var adopcion = await db.Adopcion
             .Include(a => a.animal)
@@ -342,16 +342,16 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
     }
 
     
-    private object ToResponse(Adopcion adopcion)
+    private AdopcionResponse ToResponse(Adopcion adopcion)
     {
-        return new
+        return new AdopcionResponse
         {
             adopcionId = adopcion.adopcionId,
             fechaCreacion = adopcion.fechaCreacion,
             fechaActualizacion = adopcion.fechaActualizacion,
             descripcionFamilia = adopcion.descripcionFamilia,
             adopcionEstado = adopcion.adopcionEstado,
-            usuario = new
+            usuario = new UsuarioResponse
             {
                 usuarioId = adopcion.usuario.usuarioId,
                 username = adopcion.usuario.username,
@@ -362,7 +362,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
                 telefono2 = adopcion.usuario.telefono2,
                 comuna = adopcion.usuario.comuna,
             },
-            animal = new
+            animal = new AnimalResponse
             {
                 animalId = adopcion.animal.animalId,
                 nombre = adopcion.animal.nombre,
@@ -375,7 +375,7 @@ public class AdopcionService(AppDbContext db, EventGridService eventGridService)
                 nivelActividad = adopcion.animal.nivelActividad,
                 edad = adopcion.animal.edad,
                 animalImagenes = adopcion.animal.animalImagenes,
-                organizacion = new
+                organizacion = new OrganizacionResponse
                 {
                     organizacionId = adopcion.animal.organizacion.organizacionId,
                     nombre = adopcion.animal.organizacion.nombre,

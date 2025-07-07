@@ -4,7 +4,7 @@ using Azure.Messaging.EventGrid;
 namespace AdoptionManagerMS.Services;
 
 
-public class EventGridService
+public class EventGridService : IEventGridService
 {
     private readonly EventGridPublisherClient _client;
 
@@ -15,7 +15,7 @@ public class EventGridService
         _client = new EventGridPublisherClient(endpoint, credential);
     }
     
-    public async Task PublishEventAsync<T>(string eventType, T data, string subject = null)
+    public async Task PublishEventAsync<T>(string eventType, T data, string? subject = null)
     {
         var eventGridEvent = new EventGridEvent(
             subject: subject ?? typeof(T).Name,
