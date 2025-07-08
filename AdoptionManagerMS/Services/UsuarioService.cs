@@ -5,7 +5,7 @@ using Shared;
 
 namespace AdoptionManagerMS.Services;
 
-public class UsuarioService(AppDbContext db)
+public class UsuarioService(AppDbContext db) : IUsuarioService
 {
     public async Task<Usuario?> GetByEmail(string email)
     {
@@ -38,13 +38,7 @@ public class UsuarioService(AppDbContext db)
         await VerificarOrganizacion(adop.animal.organizacionId, userId);
         
     }
-    
-    public async Task VerificaUsuarioOrganizacion(string email, int organizacionId)
-    {
-        var usuario = await VerificaUsuario(email);
-        var organizacion = await VerificarOrganizacion(organizacionId, usuario.usuarioId);
-    }
-    
+
     public async Task<Organizacion> VerificarOrganizacion(int organizacionId, int userId)
     {
         var pertenece = await OrganizacionUsuario(organizacionId, userId);

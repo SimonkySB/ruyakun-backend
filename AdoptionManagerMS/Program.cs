@@ -38,9 +38,9 @@ builder.Services.AddAppCors();
 
 
 builder.Services.AddScoped<IAdopcionService, AdopcionService>();
-builder.Services.AddScoped<SeguimientoService>();
+builder.Services.AddScoped<ISeguimientoService, SeguimientoService>();
 builder.Services.AddScoped<IEventGridService, EventGridService>();
-builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 builder.Services.AddSecurityExtensions();
 

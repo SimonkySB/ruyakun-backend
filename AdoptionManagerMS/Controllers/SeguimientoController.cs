@@ -8,7 +8,7 @@ namespace AdoptionManagerMS.Controllers;
 
 [ApiController]
 [Route("seguimientos")]
-public class SeguimientoController(SeguimientoService seguimientoService, UsuarioService usuarioService) : ControllerBase
+public class SeguimientoController(ISeguimientoService seguimientoService, IUsuarioService usuarioService) : ControllerBase
 {
 
     [HttpGet]

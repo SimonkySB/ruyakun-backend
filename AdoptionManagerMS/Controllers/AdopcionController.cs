@@ -9,7 +9,7 @@ namespace AdoptionManagerMS.Controllers;
 
 [ApiController]
 [Route("adopciones")]
-public class AdopcionController(IAdopcionService adopcionService, UsuarioService usuarioService) : ControllerBase
+public class AdopcionController(IAdopcionService adopcionService, IUsuarioService usuarioService) : ControllerBase
 {
 
     [HttpGet]

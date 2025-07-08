@@ -8,7 +8,7 @@ namespace AdoptionManagerMS.Services;
 
 
 
-public class SeguimientoService(AppDbContext db)
+public class SeguimientoService(AppDbContext db) : ISeguimientoService
 {
     
     public async Task<List<SeguimientoResponse>> List(SeguimientoQuery query)
