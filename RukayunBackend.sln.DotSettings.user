@@ -1,57 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ACloudinary_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003Fbe9f222b71a9459e857679f24145d3bf59e00_003Fee_003F926fad90_003FCloudinary_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ADateTime_002EWindows_002Ecs_002Fl_003A_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003F_002E_002E_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F5760af15ced30a01fb77e4a78fad055abcd999bf26384d983ef239e6a36171_003FDateTime_002EWindows_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e9dbc39e_002D6d37_002D4102_002D85f4_002D190646cc1d42/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="UsuarioServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.List_DeberiaRetornarOkConUsuarios&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.List_ConListaVacia_DeberiaRetornarOkConListaVacia&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.GetById_ConUsuarioExistente_DeberiaRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.GetById_ConUsuarioInexistente_DeberiaRetornarNotFound&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.Crear_ConRequestValido_DeberiaRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.Crear_CuandoServicioLanzaExcepcion_DeberiaPropagarExcepcion&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.Editar_ConUsuarioExistente_DeberiaRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.Editar_ConUsuarioInexistente_DeberiaRetornarNotFound&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.GetPerfil_ConUsuarioExistente_DeberiaRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.GetPerfil_ConUsuarioInexistente_DeberiaRetornarNotFound&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.Verificar_ConUsuarioExistente_DeberiaActualizarYRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.EditarPerfil_ConUsuarioExistente_DeberiaRetornarOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.EditarPerfil_ConUsuarioInexistente_DeberiaRetornarNotFound&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests.EditarPerfil_CuandoServicioLanzaExcepcion_DeberiaPropagarExcepcion&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BA32E9A8-D4D9-4399-9DA5-0CA9B339F3AD::net9.0::UserManagerMSTest.UsuarioControllerTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.List_SinFiltroUsuario_DeberiaRetornarTodasLasOrganizacionesActivas&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.List_ConFiltroUsuario_DeberiaRetornarSoloOrganizacionesDelUsuario&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.List_ConUsuarioSinOrganizaciones_DeberiaRetornarListaVacia&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.GetById_ConOrganizacionExistente_DeberiaRetornarOrganizacion&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.GetById_ConOrganizacionInexistente_DeberiaRetornarNull&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests.GetById_ConOrganizacionEliminada_DeberiaRetornarNull&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.List_SinUsuarioId_RetornaOkConListaCompleta&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.GetById_OrganizacionExiste_RetornaOkConOrganizacion&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.GetById_OrganizacionNoExiste_RetornaNotFound&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.Crear_RequestValido_RetornaOkConOrganizacionCreada&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.Editar_RequestValido_RetornaOkConOrganizacionActualizada&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.Eliminar_OrganizacionExiste_RetornaNoContent&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.AgregarUsuario_ParametrosValidos_RetornaOk&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests.QuitarUsuario_ParametrosValidos_RetornaNoContent&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.OrganizacionControllerTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.List_SinFiltros_RetornaTodosLosAnimales&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.List_ConFiltroSearch_RetornaAnimalesFiltrados&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.List_ConFiltroEdadMinima_RetornaAnimalesFiltradosSinResultado&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.List_ConFiltroEdadMinima_RetornaAnimalesFiltrados&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetById_AnimalExiste_RetornaAnimal&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetById_AnimalNoExiste_RetornaNull&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetById_AnimalEliminado_RetornaNull&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetByUsuario_UsuarioTieneAnimales_RetornaAnimales&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests.GetByUsuario_UsuarioNoTieneAnimales_RetornaListaVacia&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.List_ShouldReturnOkResult_WithAnimals&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.GetById_ShouldReturnOkResult_WhenAnimalExists&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.GetById_ShouldReturnNotFound_WhenAnimalDoesNotExist&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.Crear_ShouldReturnOkResult_WhenUserIsNotSuperAdminButBelongsToOrganization&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests.Crear_ShouldReturnOkResult_WhenUserIsSuperAdmin&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::B7117C82-AB38-4439-865F-D34FBF681811::net9.0::PetsManagerMSTest.AnimalControllerTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BC8A8C53-998F-4C80-82E1-48B2F82174E5::net9.0::AdoptionManagerMSTest.AdopcionServiceTests.List_ShouldReturnAllAdopciones_WhenNoFilterApplied&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::BC8A8C53-998F-4C80-82E1-48B2F82174E5::net9.0::AdoptionManagerMSTest.AdopcionServiceTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
+	
+	
+	
+	</wpf:ResourceDictionary>
