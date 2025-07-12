@@ -80,6 +80,7 @@ public class AdopcionController(IAdopcionService adopcionService, IUsuarioServic
     }
 
     [HttpPost("solicitar")]
+    [Authorize(policy: Policies.User)]
     public async Task<ActionResult> Solicitar(AdopcionSolicitarRequest request)
     {
         var usuario = await usuarioService.VerificaUsuario(User.GetUsername());
