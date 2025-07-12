@@ -361,6 +361,7 @@ public class AnimalService(AppDbContext db, ICloudinary cloudinary) : IAnimalSer
             nivelActividadId = animal.nivelActividadId,
             especie = animal.especie,
             sexo = animal.sexo,
+            edad = animal.edad,
             organizacion = new AnimalOrganizacionResponse()
             {
                 organizacionId = animal.organizacion.organizacionId,

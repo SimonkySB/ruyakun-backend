@@ -52,6 +52,7 @@ public class AnimalResponse
     public DateTime? fechaEliminacion { get; set; }
     public int tamanoId { get; set; }
     public int nivelActividadId { get; set; }
+    public int edad { get; set; }
     
     public Especie especie { get; set; }
     public Sexo sexo { get; set; }
