@@ -8,7 +8,7 @@ namespace AdoptionManagerMS.Services;
 
 
 
-public class SeguimientoService(AppDbContext db) : ISeguimientoService
+public class SeguimientoService(AppDbContext db, IEventGridService eventGridService) : ISeguimientoService
 {
     
     public async Task<List<SeguimientoResponse>> List(SeguimientoQuery query)
@@ -87,6 +87,8 @@ public class SeguimientoService(AppDbContext db) : ISeguimientoService
         }
         
         var adopcion = await db.Adopcion.AsNoTracking()
+            .Include(ad => ad.usuario)
+            .Include(ad => ad.animal)
             .FirstOrDefaultAsync(e => e.adopcionId == request.adopcionId);
         
         if (adopcion == null)
@@ -106,6 +108,34 @@ public class SeguimientoService(AppDbContext db) : ISeguimientoService
         };
         await db.Seguimiento.AddAsync(seguimiento);
         await db.SaveChangesAsync();
+
+        try
+        {
+            string? fechaEntrevista = seguimiento.fechaEntrevista?.ToString("dd-MM-yyyy HH:mm");
+            await eventGridService.PublishEventAsync(
+                "Adopcion.Solicitada",
+                new
+                {
+                    emailAdoptante = adopcion.usuario.username,
+                    contenido = $"""
+                                     <h2>Se ha programado un evento de tipo: {seguimientoTipo?.nombre} para {adopcion.animal.nombre}</h2>
+                                     <p>Detalles del evento</p>
+                                     <ul>
+                                        <li>Fecha de Interacción: {fechaEntrevista}</li>
+                                        <li>Descripción: {seguimiento.descripcion}</li>
+                                     </ul>
+                                     <p>Si tienes dudas, puedes contactarnos a adopciones@rukayun.cl</p>
+                                 """,
+                    asunto = "Seguimiento de Tu Animal de Compañia!",
+
+                },
+                $"adopciones/${adopcion.adopcionId}/seguimientos"
+            );
+        }
+        catch
+        {
+        }
+        
         return await GetById(seguimiento.seguimientoId);
     }
 

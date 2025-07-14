@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Database;
+using Moq;
 using Shared;
 
 namespace AdoptionManagerMSTest;
@@ -11,6 +12,7 @@ namespace AdoptionManagerMSTest;
 public class SeguimientoServiceTests : IDisposable
 {
     private readonly AppDbContext _context;
+    private readonly Mock<IEventGridService> _eventGridServiceMock;
     private readonly SeguimientoService _service;
 
     public SeguimientoServiceTests()
@@ -20,7 +22,8 @@ public class SeguimientoServiceTests : IDisposable
             .Options;
 
         _context = new AppDbContext(options);
-        _service = new SeguimientoService(_context);
+        _eventGridServiceMock = new Mock<IEventGridService>();
+        _service = new SeguimientoService(_context, _eventGridServiceMock.Object);
             
         SeedDatabase();
     }
@@ -273,6 +276,13 @@ public class SeguimientoServiceTests : IDisposable
         seguimientoEnDb.adopcionId.Should().Be(1);
         seguimientoEnDb.seguimientoTipoId.Should().Be(1);
         seguimientoEnDb.seguimientoEstadoId.Should().Be((int)SeguimientoEstadoEnum.Activo); // Activo
+        
+        // Verify events were published
+        _eventGridServiceMock.Verify(x => x.PublishEventAsync(
+                "Adopcion.Solicitada",
+                It.IsAny<object>(),
+                It.IsAny<string>()),
+            Times.Exactly(1));
     }
 
     [Fact]
